@@ -14,7 +14,7 @@ Then, it parses the response into a JSON and creates a new array of objects whic
   -Wind Speed & Direction  
 
 Then, it creates an HTML element for each hourly forecast object.
-This element contains a wind direction and speed arrow. The arrow is rotated in the direction of the wind and scaled to represent the strengthof the wind
+This element contains a wind direction and speed arrow. The arrow is rotated in the direction of the wind and scaled to represent the strength of the wind
 
 ## Functions
 
