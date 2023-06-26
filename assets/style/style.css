@@ -1,0 +1,209 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+
+
+body {
+    background-color: #121212;
+    font-family: 'JetBrains Mono', monospace;
+    color: goldenrod;
+}
+
+.grid-cell {
+    
+    
+    padding:1px;
+    
+    font-size: 1.5em;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+}
+
+h1{
+    display:flex;
+    justify-content:center;
+    
+    font-size:2.5em;
+    margin:0;
+}
+
+h3{
+    margin:0;
+    
+    padding:7px;
+    text-align:justify;
+    font-size:1em;
+}
+
+p{
+    margin:0;
+    min-height:50px;
+    display:flex;
+    align-items:center;
+}
+
+.title {
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
+    
+}
+
+.sub-title{
+    display:flex;
+    flex-direction:column-reverse;
+    justify-content:center;
+    border:solid black 2px;
+    align-items:center;
+
+}
+
+.sub-title img{
+    max-height:120px;
+}
+
+.intro-text{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    max-width:95%;
+}
+
+.arrow{
+    
+    margin-left:25px;
+}
+
+.N {
+    transform: rotate(180deg);
+}
+
+.NNW {
+    transform: rotate(157.5deg);
+}
+
+.NW {
+    transform: rotate(135deg);
+}
+
+.WNW {
+    transform: rotate(112.5deg);
+}
+
+.W {
+    transform: rotate(90deg);
+}
+
+.WSW {
+    transform: rotate(67.5deg);
+}
+
+.SW {
+    transform: rotate(45deg);
+}
+
+.SSW {
+    transform: rotate(22.5deg);
+}
+
+.S{
+    transform: rotate(0deg);
+}
+
+.SSE {
+    transform: rotate(337.5deg);
+}
+
+.SE {
+    transform: rotate(315deg);
+}
+
+.ESE {
+    transform: rotate(292.5deg);
+}
+
+.E {
+    transform: rotate(270deg);
+}
+
+.ENE {
+    transform: rotate(315.5deg);
+}
+
+.NE {
+    transform: rotate(292.5deg);
+}
+
+.NE {
+    transform: rotate(315deg);
+}
+
+.NNE {
+    transform: rotate(337.5deg);
+}
+
+.weather-entry{
+    
+    
+    display:flex;
+    justify-content:flex-start;
+    align-items: center;
+    font-weight:bold;
+    border-radius:2px;
+    padding-left:3%;
+    
+}
+
+.category-0 {
+    /* this is the best category */
+    background-color: cornflowerblue;
+    color: #121212;
+}
+
+.category-1 {
+    /* this category is less good */
+    background-color: #121212;
+    color: goldenrod;
+}
+
+.blue{
+    background-color: cornflowerblue;
+    color:#121212;
+    padding-inline:25px;
+    padding-block:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    border-radius:10px;
+    margin:10px;
+}
+
+.cell{
+    padding:15px;
+}
+
+@media screen and (min-width: 600px){
+    .grid-cell {
+        
+        padding-left: 10%;
+        
+    }
+
+    .sub-title {
+        display: flex;
+        flex-direction:unset;
+        justify-content: center;
+        border: solid black 2px;
+        align-items: center;
+    }
+
+    .intro-text {
+        
+        max-width: 50%;
+    }
+
+    .sub-title img {
+        max-height: 250px;
+    }
+}
