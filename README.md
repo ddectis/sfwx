@@ -21,7 +21,7 @@ FindGrid()
 -
 The NWS Hourly Request URL expects a weather station (e.g. MTR) and a grid x, y value e.g. (83,102). FindGrid() will look up that information (and more) if you provide it with GPS coords. I only needed to run this method one time, so I just hardcoded the lat + long values.
 
-PullLocalWealther()
+PullLocalWeather()
 - 
 This method makes the fetch request to the hourly forecast API. Again because this URL doesn't change in my implementation (i.e. I am focusing just on one grid square), I have hardcoded this request URL. This method parses the response to JSON and then parses further to create an array containing an object for each hourly forecast. 
 
