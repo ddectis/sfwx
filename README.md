@@ -19,7 +19,7 @@ This element contains a wind direction and speed arrow. The arrow is rotated in 
 
 FindGrid()
 -
-The NWS Hourly Request URL expects a weather station (e.g. MTR) and a grid x, y value e.g. (83,102). FindGrid() will look up that information (and more) if you provide it with GPS coords. I only needed to run this medhot one time, so I just hardcoded the lat + long values.
+The NWS Hourly Request URL expects a weather station (e.g. MTR) and a grid x, y value e.g. (83,102). FindGrid() will look up that information (and more) if you provide it with GPS coords. I only needed to run this method one time, so I just hardcoded the lat + long values.
 
 PullLocalWealther()
 - 
