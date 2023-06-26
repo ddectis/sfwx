@@ -7,10 +7,11 @@ This all started when a Sunday with steady-strong onshore winds was brilliantly 
 This API makes a fetch request to the National Weather Service hourly API:  https://www.weather.gov/documentation/services-web-api
 
 Then, it parses the response into a JSON and creates a new array of objects which pulls out:
-  -Time
-  -Temperature
-  -Dewpoint
-  -Wind Speed & Direction
+
+  -Time  
+  -Temperature  
+  -Dewpoint  
+  -Wind Speed & Direction  
 
 Then, it creates an HTML element for each hourly forecast object.
 This element contains a wind direction and speed arrow. The arrow is rotated in the direction of the wind and scaled to represent the strengthof the wind
