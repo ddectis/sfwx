@@ -1,21 +1,44 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
 
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
 
 body {
     background-color: #121212;
     font-family: 'JetBrains Mono', monospace;
-    color: goldenrod;
+    color: #daba6c;
 }
 
 .grid-cell {
     
-    
+    border: 1px solid #daba6c;
     padding:1px;
     
     font-size: 1.5em;
     display:flex;
     align-items:center;
-    justify-content:flex-start;
+    justify-content:center;
 }
 
 h1{
@@ -32,6 +55,7 @@ h3{
     padding:7px;
     text-align:justify;
     font-size:1em;
+    font-weight
 }
 
 p{
@@ -72,7 +96,7 @@ p{
 
 .arrow{
     
-    margin-left:25px;
+    margin-left:15px;
 }
 
 .N {
@@ -147,9 +171,10 @@ p{
     
     
     display:flex;
+    flex-direction:column;
     justify-content:flex-start;
-    align-items: center;
-    font-weight:bold;
+    align-items:flex-end;
+    width:100%;
     border-radius:2px;
     padding-left:3%;
     
@@ -159,12 +184,15 @@ p{
     /* this is the best category */
     background-color: cornflowerblue;
     color: #121212;
+    width: 100%;
+    font-weight: bold;
 }
 
 .category-1 {
     /* this category is less good */
     background-color: #121212;
-    color: goldenrod;
+    color: #daba6c;
+    
 }
 
 .blue{
@@ -183,10 +211,39 @@ p{
     padding:15px;
 }
 
+.weather-data{
+    display:flex;
+    width:100%;
+    justify-content:space-between;
+}
+
+.weather-time{
+    padding-block:5px;
+    font-size:0.95em;
+    padding-right:5%;
+}
+
+.weather-temperature{
+    display:flex;
+}
+
+.weather-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-inline-end:40%;
+}
+
+.weather-wind{
+    min-width:20%;
+    display:flex;
+    align-items:center;
+}
+
 @media screen and (min-width: 600px){
     .grid-cell {
         
-        padding-left: 10%;
+        
         
     }
 
@@ -205,5 +262,18 @@ p{
 
     .sub-title img {
         max-height: 250px;
+    }
+
+    .weather-entry {
+        flex-direction: row;
+        
+    }
+
+    .weather-data{
+        justify-content:space-around;
+    }
+
+    .weather-time{
+        min-width:33%;
     }
 }

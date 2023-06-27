@@ -124,8 +124,30 @@ class PullLocalWeather {
 
             // Populate the cell with object data
             cell.innerHTML = `
-                <div class="weather-entry category-${qualityCategory}"><p>${dayOfWeek} ${object.date} @ ${object.time}:00 || TEMP ${object.temperature} || DEW ${object.dewpoint} || Wind ${object.windSpeed}</p>
-                <img class="${object.windDirection} arrow" src="./assets/img/pointer-${qualityCategory}.png" alt="^" style="height: ${scale}px;"></div>
+                <div class="weather-entry category-${qualityCategory}">
+                    <div class="weather-time">${dayOfWeek} ${object.date} @ ${object.time}:00</div>
+                    <div class="weather-data">
+                        <div class="weather-temperature">
+                            <div class="weather-item">
+                                <div>TEMP</div>
+                                <div>${object.temperature}</div>
+                            </div>
+                            <div class="weather-item">
+                                <div>DEW</div>
+                                <div>${object.dewpoint}</div>
+                            </div>
+                            <div class="weather-item">
+                                <div>WIND</div>
+                                <div>${object.windSpeed}</div>
+                            </div>
+
+                        </div>
+                        <div class="weather-wind">
+
+                            <img class="${object.windDirection} arrow" src="./assets/img/pointer-${qualityCategory}.png" alt="^" style="height: ${scale}px;"></div>
+                        </div>
+                    </div>
+
                 `;
 
             // Append the cell to the grid container
