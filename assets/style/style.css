@@ -266,6 +266,7 @@ p{
 
     .weather-entry {
         flex-direction: row;
+        align-items: center;
         
     }
 

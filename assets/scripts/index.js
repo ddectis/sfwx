@@ -2,7 +2,7 @@
 const requestURL = "https://api.weather.gov/gridpoints/MTR/83,102/forecast" //this is for daily-level forecasts
 const hourlyRequestUrl = `${requestURL}/hourly`
 const weatherObjects = []; //an empty array to store the weather objects we'll create in Pull Local Weather
-const dayConvertURL = "https://timeapi.io/api/Conversion/DayOfTheWeek/" //TODO: Implement the date to day of week conversion but in a way that caches the returns so you don't hammer the API
+
 
 
 //FindGrid looks up the central sunset grid location / weather station
@@ -22,6 +22,10 @@ class PullLocalWeather {
                 console.log(data);
                 const periods = data.properties.periods; //periods is an array of objects that represent the forecast data for the next 14 periods (each day has a day and night period)
                 console.log(periods)                //optional console log to interrogate the whole periods definition
+                
+                const lastUpdated = document.querySelector("#last-updated") //grab a place on the page to place the time that the forecast was updated
+                let updateTime = data.properties.updated.split("T");
+                lastUpdated.textContent = `Forecast Data Last Updated: ${updateTime[0]} @ ${updateTime[1].substring(0,5)}`
                 
                 periods.forEach(period => {         //iterate over each period
                     if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
