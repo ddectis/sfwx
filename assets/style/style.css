@@ -17,7 +17,9 @@ body, h1, h2, h3, h4, h5, h6, p, ol, ul {
 
 button{
     margin: 1%;
-    font-size:1.4em
+    font-size:1.4em;
+    background-color: #d7d7d7;
+    padding:10px;
 }
 
 .days-of-week {
@@ -41,9 +43,9 @@ img {
 }
 
 body {
-    background-color: #121212;
+    background-color: #252525;
     font-family: 'JetBrains Mono', monospace;
-    color: #daba6c;
+    color: #d7d7d7;
 }
 
 .grid-cell {
@@ -74,10 +76,14 @@ h3{
 
 p{
     margin:0;
-
+    text-align:center;
     display:flex;
     justify-content:center;
     
+}
+
+label{
+    margin-block:5px;
 }
 
 .title {
@@ -88,13 +94,19 @@ p{
     
 }
 
-.sub-title{
-    display:flex;
-    flex-direction:column-reverse;
-    justify-content:center;
-    border:solid black 2px;
-    align-items:center;
+.filter-holder {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: solid #d7d7d7 2px;
+}
 
+.sub-title {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    border: solid #d7d7d7 2px;
+    align-items: center;
 }
 
 .sub-title img{
@@ -183,14 +195,14 @@ p{
 }
 
 .weather-entry {
-    border: 1px solid #daba6c;
+    border: 1px solid #d7d7d7;
     padding: 1px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-end;
     width: 100%;
-    border-radius: 2px;
+    border-radius: 10px;
     padding-left: 3%;
 }
 
@@ -208,9 +220,8 @@ p{
 
 .category-1 {
     /* this category is less good */
-    background-color: #121212;
-    color: #daba6c;
-    
+    background-color: #252525;
+    color: #d7d7d7;
 }
 
 .blue{

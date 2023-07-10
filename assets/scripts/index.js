@@ -25,7 +25,7 @@ class PullLocalWeather {
                 
                 const lastUpdated = document.querySelector("#last-updated") //grab a place on the page to place the time that the forecast was updated
                 let updateTime = data.properties.updated.split("T");
-                lastUpdated.textContent = `Forecast Data Last Updated: ${updateTime[0]} @ ${updateTime[1].substring(0, 5)}`
+                lastUpdated.innerHTML = `Forecast Data Last Updated: <br/> ${updateTime[0]} @ ${updateTime[1].substring(0, 5)} UTC`
 
                 let countOfBlueHours = 0 //keep track of how many of the forecast hours are "blue" i.e. good conditions
                 let streakOfBlueHours = 0; //every consecutive blue hour adds 1 to the streak, a nonblue hour sets it back to 0
@@ -94,7 +94,7 @@ class PullLocalWeather {
             }).catch(error => console.log(error));
     }
 
-    getDayOfWeek = numericalDate => {
+    getDayOfWeek = (numericalDate, returnShort)=> {
         //given the current date, calculate a day of the week
         let currentYear = new Date().getFullYear(); //first find the year          
 
@@ -105,8 +105,12 @@ class PullLocalWeather {
         //Failure to do this will e.g.lead to data from PDT showing up as 17: 00 on the day before because 24 - 7(the offset at time of writing) = 17!
         let date = dateObj.toString(); //convert the date object to a string so that you can take a substring from it
 
+        
         //console.log("Date is: " + dateObj + " Logged Date is: " + object.date + " Logged Time is: " + object.time)
         let dayOfWeek = date.substring(0, 3); //grab just the first 3 characters of the date string e.g. SUN, MON etc
+
+        
+
         return dayOfWeek
     }
 
@@ -123,7 +127,7 @@ class PullLocalWeather {
         percentOfBlueHours = percentOfBlueHours.toFixed(1);
         weatherSummary.insertAdjacentHTML("beforeend", `
             <li><u>Best Looking Day:</u> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></li>
-            <li>In the next <b>${totalHours}</b> hours, <b>${countOfBlueHours}</b> of them will be blue i.e. <b>${percentOfBlueHours}%</b></li>
+            <li>Current Blue Score: ${countOfBlueHours} / ${totalHours} = ${percentOfBlueHours}%</li>
 
             `)
     }
@@ -207,6 +211,11 @@ class PullLocalWeather {
 
 //using buttons on the UI, filter which days of the week are visible
 class FilterDaysOfWeek {
+
+    constructor() {
+        this.showOnlyBlue = false;
+    }
+
     instantiateFilterButtons = () => {
         //create references to the UI buttons we're going to use to filter the results by day of the week
         const sundayButton = document.querySelector("#sunday");
@@ -217,6 +226,13 @@ class FilterDaysOfWeek {
         const fridayButton = document.querySelector("#friday");
         const saturdayButton = document.querySelector("#saturday");
         const allButton = document.querySelector("#all-days");
+
+        const showOnlyBlueButton = document.querySelector("#only-blue-hours")
+
+        showOnlyBlueButton.addEventListener("change", event => {
+            this.showOnlyBlue = !this.showOnlyBlue;
+            console.log("show only blue: " + this.showOnlyBlue)
+        })
 
         //then put them all into an array
         const filterButtons = [sundayButton, mondayButton, tuesdayButton, wednesdayButton, thursdayButton, fridayButton, saturdayButton, allButton]
@@ -229,7 +245,11 @@ class FilterDaysOfWeek {
             })
         })
 
+        
+
     }
+
+    
 
     filter = day => {
 
@@ -244,6 +264,8 @@ class FilterDaysOfWeek {
         const thursdays = document.querySelectorAll("#thu")
         const fridays = document.querySelectorAll("#fri")
         const saturdays = document.querySelectorAll("#sat")
+
+        
 
         //and then put all all of those together in an array so you can forEach over them all at once
         const dayGroup = [sundays, mondays, tuesdays, wednesdays, thursdays, fridays, saturdays]
@@ -292,8 +314,17 @@ class FilterDaysOfWeek {
                 })
             })
         }
+        console.log(this.showOnlyBlue)
+        if (this.showOnlyBlue) {
+            console.log("yes")
+            const nonBlueHours = document.querySelectorAll(".category-1")
+            nonBlueHours.forEach(hour => {
+                hour.classList.add("hide");
+            })
+        }
 
     }
+
     
 
 }

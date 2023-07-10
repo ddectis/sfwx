@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./assets/style/style.css?3" />
+    <link rel="stylesheet" href="./assets/style/style.css?4" />
      <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Danometer - SF West Side Prognostication</title>
     <title></title>
@@ -11,24 +11,13 @@
 <body>
 
     <div class="title">
-        <h1>Danometer</h1>
+        <h2>Danometer</h2>
         <div class="sub-title">
             <div class="intro-text">
                 <p>This page shows the hourly NWS forecast for the Central + Outer Sunset. The goal is to easily track a few parameters that lead to the marine layer forming or clearing.</p>
-                <br/><p> I am trying to answer the question: "Is it going to be nice tomorrow / later in the Sunset?"</p>
+                <br /><p> I am trying to answer the question: "Is it going to be nice tomorrow / later in the Sunset?"</p>
 
-                <div class="blue">
 
-                    <h2>Forecast Summary</h2>
-                    <ul id="weather-summary">
-                    </ul>
-                    <h3>What is a Blue Hour?</h3>
-                    <ul>
-                        <li>TEMP - DEW > 5 and / or WIND < 10 mph</li>
-                        <li>Days that have those parameters, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</li>
-                    </ul>
-
-                </div>
                 <h3 id="last-updated">Forecast Data Last Updated: </h3>
             </div>
 
@@ -37,22 +26,42 @@
             <img class="cell" src="./assets/img/cell.png" alt="The map cell indicated on this page" />
         </div>
 
+        <div class="blue">
+
+            <h2>Forecast Summary</h2>
+            <ul id="weather-summary">
+            </ul>
+            <h3>What is a Blue Hour?</h3>
+            <ul>
+                <li>(TEMP - DEW) > 5 and WIND < 10 mph</li>
+                <li>Days that have those parameters, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="filter-holder">
+        <p>Filter day of the week</p>
+
+        <div class="days-of-week">
+
+
+            <button id="sunday">Sunday</button>
+            <button id="monday">Monday</button>
+            <button id="tuesday">Tuesday</button>
+            <button id="wednesday">Wednesday</button>
+            <button id="thursday">Thursday</button>
+            <button id="friday">Friday</button>
+            <button id="saturday">Saturday</button>
+            <button id="all-days">All</button>
+        </div>
+        <label><input type="checkbox" id="only-blue-hours" />Show Only Blue Hours</label>
     </div>
     
-    <p>Filter day of the week</p>
-    <div class="days-of-week">
-        <button id="sunday">Sunday</button>
-        <button id="monday">Monday</button>
-        <button id="tuesday">Tuesday</button>
-        <button id="wednesday">Wednesday</button>
-        <button id="thursday">Thursday</button>
-        <button id="friday">Friday</button>
-        <button id="saturday">Saturday</button>
-        <button id="all-days">All</button>
-    </div>
 
     <div id="grid"></div>
 
-    <script type="module" src="./assets/scripts/index.js"></script>
+    <script type="module" src="./assets/scripts/index.js?1"></script>
 </body>
 </html>
