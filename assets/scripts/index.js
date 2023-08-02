@@ -43,25 +43,20 @@ class PullLocalWeather {
                         let goodConditions = false;
 
                         //check to see if conditions are good
-                        let windThreshold = 10; //looking for a wind value thats < threshold
+                        let windThreshold = 11; //looking for a wind value thats < threshold
                         let dewDeltaThreshold = 4; //looking for a delta that's > threshold
+                        let temperatureThreshold = 65; //look for a temperature that's > threshold
                         //console.log("Windspeed: " + windSpeed + " DewDelta: " + tempDewDelta);
-                        if (windSpeed < windThreshold) {
-                            //console.log("Possibly good conditions?");
-                            if (tempDewDelta > dewDeltaThreshold) {
-
-                                goodConditions = true;
-                                countOfBlueHours++;
-                                streakOfBlueHours++;
-                                if (streakOfBlueHours > longestBlueHourStreak) {
-                                    dayWithLongestBlueStreak = this.getDayOfWeek(entryTime[0].substring(5))
-                                    longestBlueHourStreak = streakOfBlueHours;
-                                }
-                                //console.log("Good Conditions! Count = " + countOfBlueHours + " streak count: " + longestBlueHourStreak + " Longest streak ends on: " + dayWithLongestBlueStreak);
-
-                            } else {
-                                streakOfBlueHours = 0;
-                            }
+                        if (windSpeed < windThreshold && tempDewDelta > dewDeltaThreshold || period.temperature > temperatureThreshold) {
+                            goodConditions = true;
+                            countOfBlueHours++;
+                            streakOfBlueHours++;
+                            if (streakOfBlueHours > longestBlueHourStreak) {
+                                dayWithLongestBlueStreak = this.getDayOfWeek(entryTime[0].substring(5))
+                                longestBlueHourStreak = streakOfBlueHours;
+                            } 
+                        } else {
+                            streakOfBlueHours = 0;
                         }
 
                         if (windSpeed < 10) { //insert a leading zero for a wind < 10
@@ -91,7 +86,11 @@ class PullLocalWeather {
                 this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
                 this.printCast(weatherObjects);
                 return weatherObjects;
-            }).catch(error => console.log(error));
+            }).catch(error => {
+                console.log(error)
+                const weatherSummary = document.querySelector("#weather-summary");
+                weatherSummary.insertAdjacentHTML("beforeend", `<p>Error: ${error}`)
+            });
     }
 
     getDayOfWeek = (numericalDate, returnShort)=> {
@@ -125,11 +124,17 @@ class PullLocalWeather {
 
         let percentOfBlueHours = longestStreakCount / totalHours * 100
         percentOfBlueHours = percentOfBlueHours.toFixed(1);
-        weatherSummary.insertAdjacentHTML("beforeend", `
-            <li><u>Best Looking Day:</u> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></li>
-            <li>Current Blue Score: ${countOfBlueHours} / ${totalHours} = ${percentOfBlueHours}%</li>
+
+        if (countOfBlueHours > 0) {
+            weatherSummary.insertAdjacentHTML("beforeend", `
+            <li><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></li>
+            <li><u>Current Blue Score:</u> <br/><b>${countOfBlueHours} / ${totalHours} = ${percentOfBlueHours}</b></li>
 
             `)
+        } else {
+            weatherSummary.insertAdjacentHTML("beforeend", `<li>There are ZERO blue hours in the forecast!</li>`)
+        }
+        
     }
 
     printCast = objects => {

@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./assets/style/style.css?5" />
+    <link rel="stylesheet" href="./assets/style/style.css?6" />
      <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Danometer - SF West Side Prognostication</title>
     <title></title>
@@ -11,12 +11,15 @@
 <body>
 
     <div class="title">
-        <h2>Danometer</h2>
+        
+        <a href="/home">>> Project by: Dectronica // Click to see more <<</a>
+        
         <div class="sub-title">
             <div class="intro-text">
+                <h1>Danometer</h1>
                 <p>This page shows the hourly NWS forecast for the Central + Outer Sunset. The goal is to easily track a few parameters that lead to the marine layer forming or clearing.</p>
                 <br /><p> I am trying to answer the question: "Is it going to be nice tomorrow / later in the Sunset?"</p>
-
+                
 
                 <h3 id="last-updated">Forecast Data Last Updated: </h3>
             </div>
@@ -32,10 +35,20 @@
             <ul id="weather-summary">
             </ul>
             <h3>What is a Blue Hour?</h3>
-            <ul>
-                <li>(TEMP - DEW) > 5 and WIND < 10 mph</li>
-                <li>Days that have those parameters, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</li>
+            <div class="param-container">
+                <ul class="blue-params">
+                <li>(TEMP - DEW) > 5</li>
+                <p><b>AND</b></p>
+                <li>WIND < 10 mph</li>
             </ul>
+            <h2>OR</h2>
+            <ul class="blue-params">
+                <li>TEMP > 65 mph</li>
+            </ul>
+            </div>
+            
+            <br/>
+            <p>Days with hours like these, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</p>
 
         </div>
 
@@ -62,6 +75,6 @@
 
     <div id="grid"></div>
 
-    <script type="module" src="./assets/scripts/index.js?2"></script>
+    <script type="module" src="./assets/scripts/index.js?3"></script>
 </body>
 </html>

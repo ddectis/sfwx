@@ -29,8 +29,43 @@ button{
 
 }
 
+a {
+    color: inherit;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-shadow: 0px 3px 3px #b5a13a;
+    margin-block: 10px;
+    text-align: center;
+}
+
+text{
+    stroke: black;
+    stroke-width:5px;
+}
+
+
 ol, ul {
     list-style: inside;
+}
+
+.blue-params {
+    border: 1px solid black;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 7px 4px 0px #00000096;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.param-container {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    width: 100%;
+    align-items: stretch;
+    max-width: 400px;
 }
 
 li{
@@ -79,7 +114,7 @@ p{
     text-align:center;
     display:flex;
     justify-content:center;
-    
+    font-size:0.75em;
 }
 
 label{
@@ -103,7 +138,7 @@ label{
 
 .sub-title {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: row;
     justify-content: center;
     border: solid #d7d7d7 2px;
     align-items: center;
