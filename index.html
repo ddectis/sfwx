@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./assets/style/style.css?6" />
+    <link rel="stylesheet" href="./assets/style/style.css?8" />
      <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Danometer - SF West Side Prognostication</title>
     <title></title>
@@ -14,41 +14,45 @@
         
         <a href="/home">>> Project by: Dectronica // Click to see more <<</a>
         
-        <div class="sub-title">
+        <div class="sub-title hide" id="project-info">
             <div class="intro-text">
-                <h1>Danometer</h1>
-                <p>This page shows the hourly NWS forecast for the Central + Outer Sunset. The goal is to easily track a few parameters that lead to the marine layer forming or clearing.</p>
-                <br /><p> I am trying to answer the question: "Is it going to be nice tomorrow / later in the Sunset?"</p>
-                
+                <h1><u>Danometer</u></h1>
+                <br/>
+                <h3>This page shows the hourly NWS forecast for the Central + Outer Sunset. The goal is to easily track a few parameters that lead to the marine layer forming or clearing.</h3>
+                <br /><h3> I am trying to answer the question: "Is it going to be nice tomorrow / later in the Sunset?"</h3>
+                <h3>This is a work in progress. I'd love to hear your feedback at dandectis@gmail.com'</h3>
 
-                <h3 id="last-updated">Forecast Data Last Updated: </h3>
             </div>
-
-
 
             <img class="cell" src="./assets/img/cell.png" alt="The map cell indicated on this page" />
         </div>
 
         <div class="blue">
-
-            <h2>Forecast Summary</h2>
-            <ul id="weather-summary">
-            </ul>
-            <h3>What is a Blue Hour?</h3>
-            <div class="param-container">
-                <ul class="blue-params">
-                <li>(TEMP - DEW) > 5</li>
-                <p><b>AND</b></p>
-                <li>WIND < 10 mph</li>
-            </ul>
-            <h2>OR</h2>
-            <ul class="blue-params">
-                <li>TEMP > 65 mph</li>
-            </ul>
+            
+            <button id="info-toggle" class="info-button">i</button>
+            <h2>Sunset + Richmond Forecast</h2> 
+                <ul class="weather-summary" id="weather-summary">
+                </ul>
+            
+           
+            <div class="blue-info-container">
+                <h3>What is a Blue Hour?</h3>
+                <div class="param-container">
+                    <ul class="blue-params">
+                        <li>(TEMP-DEW) > 5</li>
+                        <p><b>AND</b></p>
+                        <li>WIND < 10 mph</li>
+                    </ul>
+                    <h2>OR</h2>
+                    <ul class="blue-params">
+                        <li>TEMP > 65 mph</li>
+                    </ul>
+                </div>
+            <br/>
+                <p>Days with hours like these, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</p>
             </div>
             
-            <br/>
-            <p>Days with hours like these, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</p>
+             <h3 id="last-updated">Forecast Data Last Updated: </h3>
 
         </div>
 
@@ -75,6 +79,6 @@
 
     <div id="grid"></div>
 
-    <script type="module" src="./assets/scripts/index.js?3"></script>
+    <script type="module" src="./assets/scripts/index.js?5"></script>
 </body>
 </html>

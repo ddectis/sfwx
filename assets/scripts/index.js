@@ -16,16 +16,19 @@ class FindGrid {
 
 class PullLocalWeather {
     pullCast = () => {
+        const weatherSummary = document.querySelector("#weather-summary");
+        weatherSummary.insertAdjacentHTML("beforeend",`<h2>Fetching Forecast Data...</h2>`)
         fetch(hourlyRequestUrl)                           //fetch the requestURL that's been preconfigured to pull the expected weather grid
             .then(response => response.json())      //parse the resulting JSON string into a JSON
             .then(data => {                         //then do stuff with the response
+                weatherSummary.innerHTML = ``;
                 console.log(data);
                 const periods = data.properties.periods; //periods is an array of objects that represent the forecast data for the next 14 periods (each day has a day and night period)
                 console.log(periods)                //optional console log to interrogate the whole periods definition
                 
                 const lastUpdated = document.querySelector("#last-updated") //grab a place on the page to place the time that the forecast was updated
                 let updateTime = data.properties.updated.split("T");
-                lastUpdated.innerHTML = `Forecast Data Last Updated: <br/> ${updateTime[0]} @ ${updateTime[1].substring(0, 5)} UTC`
+                lastUpdated.innerHTML = `<p>Forecast Data Last Updated: ${updateTime[0]} @ ${updateTime[1].substring(0, 5)} UTC</p>`
 
                 let countOfBlueHours = 0 //keep track of how many of the forecast hours are "blue" i.e. good conditions
                 let streakOfBlueHours = 0; //every consecutive blue hour adds 1 to the streak, a nonblue hour sets it back to 0
@@ -127,8 +130,8 @@ class PullLocalWeather {
 
         if (countOfBlueHours > 0) {
             weatherSummary.insertAdjacentHTML("beforeend", `
-            <li><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></li>
-            <li><u>Current Blue Score:</u> <br/><b>${countOfBlueHours} / ${totalHours} = ${percentOfBlueHours}</b></li>
+            <li class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></li>
+            <li class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><b>${countOfBlueHours} blue / ${totalHours} total = ${percentOfBlueHours}%</b></li>
 
             `)
         } else {
@@ -335,8 +338,6 @@ class FilterDaysOfWeek {
 }
 
 
-   
-
 //enable this code to find a grid location
 
 //const find = new FindGrid;
@@ -345,6 +346,19 @@ class FilterDaysOfWeek {
 //pull the forecast for the configured url
 const forecast = new PullLocalWeather;
 forecast.pullCast();
+
+const aboutButton = document.querySelector("#info-toggle")
+const projectInfoPanel = document.querySelector("#project-info")
+aboutButton.addEventListener("click", event => {
+    projectInfoPanel.classList.toggle("hide")
+    if (aboutButton.textContent === "i") {
+        console.log("swapping")
+        aboutButton.textContent = "x"
+    } else {
+        console.log("swapping back")
+        aboutButton.textContent = "i"
+    }
+})
 
 
 
