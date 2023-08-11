@@ -16,84 +16,110 @@ class FindGrid {
 
 class PullLocalWeather {
     pullCast = () => {
+        let useCachedForecast = false;
         const weatherSummary = document.querySelector("#weather-summary");
         weatherSummary.insertAdjacentHTML("beforeend",`<h2>Fetching Forecast Data...</h2>`)
         fetch(hourlyRequestUrl)                           //fetch the requestURL that's been preconfigured to pull the expected weather grid
-            .then(response => response.json())      //parse the resulting JSON string into a JSON
-            .then(data => {                         //then do stuff with the response
-                weatherSummary.innerHTML = ``;
-                console.log(data);
-                const periods = data.properties.periods; //periods is an array of objects that represent the forecast data for the next 14 periods (each day has a day and night period)
-                console.log(periods)                //optional console log to interrogate the whole periods definition
-                
-                const lastUpdated = document.querySelector("#last-updated") //grab a place on the page to place the time that the forecast was updated
-                let updateTime = data.properties.updated.split("T");
-                lastUpdated.innerHTML = `<p>Forecast Data Last Updated: ${updateTime[0]} @ ${updateTime[1].substring(0, 5)} UTC</p>`
+            .then(response => {
+                if (response.status === 200) { //check the response status 
+                    return response.json();     
+                } else {                        //if it's not 200 / OK, then indicate that we need to use the cached forecast
+                    useCachedForecast = true;
+                    console.log("Use Cached Forecast!")
 
-                let countOfBlueHours = 0 //keep track of how many of the forecast hours are "blue" i.e. good conditions
-                let streakOfBlueHours = 0; //every consecutive blue hour adds 1 to the streak, a nonblue hour sets it back to 0
-                let longestBlueHourStreak = 0; 
-                let dayWithLongestBlueStreak = ``;
-                let totalHours = 0;
-                
-                periods.forEach(period => {         //iterate over each period
-                    if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
-                        let f = period.dewpoint.value * 9 / 5 + 32; //convert the C value we will receive into an F value
-                        let entryTime = period.startTime.split("T"); //split period.startTime into an array that splits at T
-
-                        let tempDewDelta = period.temperature - f; //compare the current temperature to the dewpoint and record the delta
-                        let windSpeed = period.windSpeed.substring(0, 2); //.eriod.windSpeed comes with "mph". This gets rid of it.
-                        let goodConditions = false;
-
-                        //check to see if conditions are good
-                        let windThreshold = 11; //looking for a wind value thats < threshold
-                        let dewDeltaThreshold = 4; //looking for a delta that's > threshold
-                        let temperatureThreshold = 65; //look for a temperature that's > threshold
-                        //console.log("Windspeed: " + windSpeed + " DewDelta: " + tempDewDelta);
-                        if (windSpeed < windThreshold && tempDewDelta > dewDeltaThreshold || period.temperature > temperatureThreshold) {
-                            goodConditions = true;
-                            countOfBlueHours++;
-                            streakOfBlueHours++;
-                            if (streakOfBlueHours > longestBlueHourStreak) {
-                                dayWithLongestBlueStreak = this.getDayOfWeek(entryTime[0].substring(5))
-                                longestBlueHourStreak = streakOfBlueHours;
-                            } 
-                        } else {
-                            streakOfBlueHours = 0;
-                        }
-
-                        if (windSpeed < 10) { //insert a leading zero for a wind < 10
-                            windSpeed = "0" + windSpeed; //windSpeed is converted to a string at this point!
-                            //console.log("We appended a 0 to the front of a < 10 windspeed and got: " + windSpeed)
-                        }
-
-                        //create a new object for each iteration
-                        let obj = {                 
-
-                            date: entryTime[0].substring(5),
-                            time: entryTime[1].substring(0, 2),
-                            temperature: period.temperature,
-                            dewpoint: f,
-                            windDirection: period.windDirection,
-                            windSpeed: windSpeed,
-                            goodConditions: goodConditions
-                        }
-                        weatherObjects.push(obj);   //add the new object to the array that stores the forecast objects
-                    }
-                    
-                    totalHours++;
-                    return weatherObjects;
-                })
-                console.log("Weather Objects Follow");
-                //console.dir(weatherObjects);
-                this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
-                this.printCast(weatherObjects);
-                return weatherObjects;
-            }).catch(error => {
+                }
+            })
+            .then(data => {                                                     //then do stuff with the response
+                if (!useCachedForecast) {                                       //if you're not indicated to use the cahedForecast, 
+                    console.log("about to set local storage")
+                    const stringifiedObject = JSON.stringify(data)              //parse the data back to a json string
+                    localStorage.setItem("cachedForecast", stringifiedObject)   //and then save it to local storage. This is the cached forecast to use in the future if the forecast call fails
+                    this.parseWeatherData(data, useCachedForecast)              //then parse the forecast data
+                } else {                                                            //or in the case where you ARE using cachedForecast
+                    const cachedForecast = localStorage.getItem("cachedForecast");  //load it from local storage
+                    const jsonForecast = JSON.parse(cachedForecast)                 //parse it into a JSON
+                    this.parseWeatherData(jsonForecast, useCachedForecast);         //and then parse the forecast data
+                }
+            }).catch(error => {                                                 //user should only end up in the catch block in the case that the API returns a bad response AND it's their first visit to the site/
                 console.log(error)
                 const weatherSummary = document.querySelector("#weather-summary");
-                weatherSummary.insertAdjacentHTML("beforeend", `<p>Error: ${error}`)
+                weatherSummary.insertAdjacentHTML("beforeend", `<p class="alert"><b>Apologies.<br/><br/> The NWS Weather API sometimes returns an invalid forecast due to missing hours at the end of the period. <br/><br/> Therefore, I attempt to fallback to a cached version of the forecast. <br/><br/>However, this appears to be your first visit to the Danometer, as your device does not have a cached forecast to fallback to. <br/><br/>So, instead, you're seeing this message. Sorry about that. This error will resolve in the next forecast update / within a few hours, please check again.</b>`)
             });
+    }
+
+    parseWeatherData = (data, usingCache) => {
+        const weatherSummary = document.querySelector("#weather-summary");
+        weatherSummary.innerHTML = ``;
+        console.log(data);
+        const periods = data.properties.periods; //periods is an array of objects that represent the forecast data for the next 14 periods (each day has a day and night period)
+        console.log(periods)                //optional console log to interrogate the whole periods definition
+
+        const lastUpdated = document.querySelector("#last-updated") //grab a place on the page to place the time that the forecast was updated
+        let updateTime = data.properties.updated.split("T");
+        lastUpdated.innerHTML = `<p>Forecast Data Last Updated: ${updateTime[0]} @ ${updateTime[1].substring(0, 5)} UTC</p>`
+        if (usingCache) {
+            lastUpdated.insertAdjacentHTML("beforeend",`<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
+        }
+
+        let countOfBlueHours = 0 //keep track of how many of the forecast hours are "blue" i.e. good conditions
+        let streakOfBlueHours = 0; //every consecutive blue hour adds 1 to the streak, a nonblue hour sets it back to 0
+        let longestBlueHourStreak = 0;
+        let dayWithLongestBlueStreak = ``;
+        let totalHours = 0;
+
+        periods.forEach(period => {         //iterate over each period
+            if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
+                let f = period.dewpoint.value * 9 / 5 + 32; //convert the C value we will receive into an F value
+                let entryTime = period.startTime.split("T"); //split period.startTime into an array that splits at T
+
+                let tempDewDelta = period.temperature - f; //compare the current temperature to the dewpoint and record the delta
+                let windSpeed = period.windSpeed.substring(0, 2); //.eriod.windSpeed comes with "mph". This gets rid of it.
+                let goodConditions = false;
+
+                //check to see if conditions are good
+                let windThreshold = 11; //looking for a wind value thats < threshold
+                let dewDeltaThreshold = 4; //looking for a delta that's > threshold
+                let temperatureThreshold = 65; //look for a temperature that's > threshold
+                //console.log("Windspeed: " + windSpeed + " DewDelta: " + tempDewDelta);
+                if (windSpeed < windThreshold && tempDewDelta > dewDeltaThreshold || period.temperature > temperatureThreshold) {
+                    goodConditions = true;
+                    countOfBlueHours++;
+                    streakOfBlueHours++;
+                    if (streakOfBlueHours > longestBlueHourStreak) {
+                        dayWithLongestBlueStreak = this.getDayOfWeek(entryTime[0].substring(5))
+                        longestBlueHourStreak = streakOfBlueHours;
+                    }
+                } else {
+                    streakOfBlueHours = 0;
+                }
+
+                if (windSpeed < 10) { //insert a leading zero for a wind < 10
+                    windSpeed = "0" + windSpeed; //windSpeed is converted to a string at this point!
+                    //console.log("We appended a 0 to the front of a < 10 windspeed and got: " + windSpeed)
+                }
+
+                //create a new object for each iteration
+                let obj = {
+
+                    date: entryTime[0].substring(5),
+                    time: entryTime[1].substring(0, 2),
+                    temperature: period.temperature,
+                    dewpoint: f,
+                    windDirection: period.windDirection,
+                    windSpeed: windSpeed,
+                    goodConditions: goodConditions
+                }
+                weatherObjects.push(obj);   //add the new object to the array that stores the forecast objects
+            }
+
+            totalHours++;
+            return weatherObjects;
+        })
+        console.log("Weather Objects Follow");
+        //console.dir(weatherObjects);
+        this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
+        this.printCast(weatherObjects);
+        return weatherObjects;
     }
 
     getDayOfWeek = (numericalDate, returnShort)=> {
@@ -130,8 +156,8 @@ class PullLocalWeather {
 
         if (countOfBlueHours > 0) {
             weatherSummary.insertAdjacentHTML("beforeend", `
-            <li class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></li>
-            <li class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><b>${countOfBlueHours} blue / ${totalHours} total = ${percentOfBlueHours}%</b></li>
+            <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
+            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><b>${countOfBlueHours} blue / ${totalHours} total = ${percentOfBlueHours}%</b></div>
 
             `)
         } else {
