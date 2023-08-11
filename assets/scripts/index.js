@@ -16,41 +16,38 @@ class FindGrid {
 
 class PullLocalWeather {
     pullCast = () => {
+        let useCachedForecast = false;
         const weatherSummary = document.querySelector("#weather-summary");
         weatherSummary.insertAdjacentHTML("beforeend",`<h2>Fetching Forecast Data...</h2>`)
         fetch(hourlyRequestUrl)                           //fetch the requestURL that's been preconfigured to pull the expected weather grid
             .then(response => {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    const weatherSummary = document.querySelector("#weather-summary");
-                    const cachedForecast = localStorage.getItem("cachedForecast")
-                    
-                    console.log("attempting to load cached forecast")
-                    if (cachedForecast !== undefined) {
-                        console.log("loading cached forecast")
-                        const jsonForecast = JSON.parse(cachedForecast)
-                        this.parseWeatherData(jsonForecast)
-                        return;
-                    } else {
-                        return weatherSummary.insertAdjacentHTML("beforeend", `<p>This appears to be your first visit to the Danometer, as your device does not have a cached forecast to fallback to. The NWS Weather API sometimes returns an invalid forecast due to missing hours at the end of the forecast. This error will resolve in the next few hours, please check again.`)
-                    }
+                if (response.status === 200) { //check the response status 
+                    return response.json();     
+                } else {                        //if it's not 200 / OK, then indicate that we need to use the cached forecast
+                    useCachedForecast = true;
+                    console.log("Use Cached Forecast!")
 
                 }
             })
-            .then(data => {                         //then do stuff with the response
-                console.log("about to set local storage")
-                const stringifiedObject = JSON.stringify(data)
-                localStorage.setItem("cachedForecast", stringifiedObject)
-                this.parseWeatherData(data)
-            }).catch(error => {
+            .then(data => {                                                     //then do stuff with the response
+                if (!useCachedForecast) {                                       //if you're not indicated to use the cahedForecast, 
+                    console.log("about to set local storage")
+                    const stringifiedObject = JSON.stringify(data)              //parse the data back to a json string
+                    localStorage.setItem("cachedForecast", stringifiedObject)   //and then save it to local storage. This is the cached forecast to use in the future if the forecast call fails
+                    this.parseWeatherData(data, useCachedForecast)              //then parse the forecast data
+                } else {                                                            //or in the case where you ARE using cachedForecast
+                    const cachedForecast = localStorage.getItem("cachedForecast");  //load it from local storage
+                    const jsonForecast = JSON.parse(cachedForecast)                 //parse it into a JSON
+                    this.parseWeatherData(jsonForecast, useCachedForecast);         //and then parse the forecast data
+                }
+            }).catch(error => {                                                 //user should only end up in the catch block in the case that the API returns a bad response AND it's their first visit to the site/
                 console.log(error)
                 const weatherSummary = document.querySelector("#weather-summary");
-                weatherSummary.insertAdjacentHTML("beforeend", `<p class="alert"><b>Apologies.<br/><br/> The NWS Weather API sometimes returns an invalid forecast due to missing hours at the end of the period. <br/><br/> Therefore, I attempt to fallback to a cached version of the forecast. <br/><br/>However, this appears to be your first visit to the Danometer, as your device does not have a cached forecast to fallback to. <br/><br/>So, instead, you're seeing this error. Sorry about that. This error will resolve in the next few hours, please check again.</b>`)
+                weatherSummary.insertAdjacentHTML("beforeend", `<p class="alert"><b>Apologies.<br/><br/> The NWS Weather API sometimes returns an invalid forecast due to missing hours at the end of the period. <br/><br/> Therefore, I attempt to fallback to a cached version of the forecast. <br/><br/>However, this appears to be your first visit to the Danometer, as your device does not have a cached forecast to fallback to. <br/><br/>So, instead, you're seeing this message. Sorry about that. This error will resolve in the next forecast update / within a few hours, please check again.</b>`)
             });
     }
 
-    parseWeatherData = data => {
+    parseWeatherData = (data, usingCache) => {
         const weatherSummary = document.querySelector("#weather-summary");
         weatherSummary.innerHTML = ``;
         console.log(data);
@@ -60,6 +57,9 @@ class PullLocalWeather {
         const lastUpdated = document.querySelector("#last-updated") //grab a place on the page to place the time that the forecast was updated
         let updateTime = data.properties.updated.split("T");
         lastUpdated.innerHTML = `<p>Forecast Data Last Updated: ${updateTime[0]} @ ${updateTime[1].substring(0, 5)} UTC</p>`
+        if (usingCache) {
+            lastUpdated.insertAdjacentHTML("beforeend",`<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
+        }
 
         let countOfBlueHours = 0 //keep track of how many of the forecast hours are "blue" i.e. good conditions
         let streakOfBlueHours = 0; //every consecutive blue hour adds 1 to the streak, a nonblue hour sets it back to 0
