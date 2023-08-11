@@ -261,7 +261,7 @@ class FilterDaysOfWeek {
 
     filter = day => {
 
-        //trim the passed value e.d. "Sunday" becomes "sun"
+        ///trim the passed value e.d. "Sunday" becomes "sun"
         const trimmedFilterParam = day.toLowerCase().slice(0, 3);
 
         //these will return a node list so we'll have to forEach over them
