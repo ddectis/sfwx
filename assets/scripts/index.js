@@ -26,7 +26,6 @@ class PullLocalWeather {
                 } else {                        //if it's not 200 / OK, then indicate that we need to use the cached forecast
                     useCachedForecast = true;
                     console.log("Use Cached Forecast!")
-
                 }
             })
             .then(data => {                                                     //then do stuff with the response
