@@ -25,12 +25,12 @@ class PullLocalWeather {
                     return response.json();     
                 } else {                        //if it's not 200 / OK, then indicate that we need to use the cached forecast
                     useCachedForecast = true;
-                    console.log("Use Cached Forecast!")
+                    //console.log("Use Cached Forecast!")
                 }
             })
             .then(data => {                                                     //then do stuff with the response
                 if (!useCachedForecast) {                                       //if you're not indicated to use the cahedForecast, 
-                    console.log("about to set local storage")
+                    //console.log("about to set local storage")
                     const stringifiedObject = JSON.stringify(data)              //parse the data back to a json string
                     localStorage.setItem("cachedForecast", stringifiedObject)   //and then save it to local storage. This is the cached forecast to use in the future if the forecast call fails
                     this.parseWeatherData(data, useCachedForecast)              //then parse the forecast data
@@ -49,13 +49,30 @@ class PullLocalWeather {
     parseWeatherData = (data, usingCache) => {
         const weatherSummary = document.querySelector("#weather-summary");
         weatherSummary.innerHTML = ``;
-        console.log(data);
+        //console.log(data);
         const periods = data.properties.periods; //periods is an array of objects that represent the forecast data for the next 14 periods (each day has a day and night period)
-        console.log(periods)                //optional console log to interrogate the whole periods definition
+        //console.log(periods)                //optional console log to interrogate the whole periods definition
 
         const lastUpdated = document.querySelector("#last-updated") //grab a place on the page to place the time that the forecast was updated
-        let updateTime = data.properties.updated.split("T");
-        lastUpdated.innerHTML = `<p>Forecast Data Last Updated: ${updateTime[0]} @ ${updateTime[1].substring(0, 5)} UTC</p>`
+        let updateTime = data.properties.updated.split("T"); //data.properties.update comes in as: 2023-08-13T08:54:01+00:00
+        //console.log(data.properties.updated)
+        let dateString = updateTime[0] + "-" + updateTime[1] //re-combine the split updated time into the format expected to create a JS Date Object
+        //console.log(dateString)
+        const updateDateObject = this.createDateObject(dateString) //and then put the string into a Date object so that we can use Date Object methods later
+        //console.log(updateDateObject)
+
+        let updateHours = updateDateObject.getHours() //pull out the hours from the newly created Date object
+        let amPM = "AM" 
+        if (updateHours > 12) { //the NWS API returns the time in 24 hours, so check to see if it's the afternoon
+            amPM = "PM"         //if so, set the text to indicate
+            updateHours -= 12   //and subtract 12 hours from the time so we can print something like 4:00 PM instead of 16:00
+        }
+
+        let updateDayOfWeek = this.getDayOfWeek(this.getNumericalDate(updateTime)); //get the day of the week e.g. Sun or Mon
+        //console.log(updateTime[0].substring(5));
+        //console.log(updateDate)
+
+        lastUpdated.innerHTML = `<p>Forecast Data Last Updated: ${updateDayOfWeek} @ ${updateHours}:${updateDateObject.getMinutes()} ${amPM} </p>`
         if (usingCache) {
             lastUpdated.insertAdjacentHTML("beforeend",`<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
         }
@@ -70,7 +87,7 @@ class PullLocalWeather {
             if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
                 let f = period.dewpoint.value * 9 / 5 + 32; //convert the C value we will receive into an F value
                 let entryTime = period.startTime.split("T"); //split period.startTime into an array that splits at T
-
+                
                 let tempDewDelta = period.temperature - f; //compare the current temperature to the dewpoint and record the delta
                 let windSpeed = period.windSpeed.substring(0, 2); //.eriod.windSpeed comes with "mph". This gets rid of it.
                 let goodConditions = false;
@@ -85,7 +102,8 @@ class PullLocalWeather {
                     countOfBlueHours++;
                     streakOfBlueHours++;
                     if (streakOfBlueHours > longestBlueHourStreak) {
-                        dayWithLongestBlueStreak = this.getDayOfWeek(entryTime[0].substring(5))
+                        dayWithLongestBlueStreak = this.getDayOfWeek(this.getNumericalDate(entryTime))
+                        //console.log(entryTime[0].substring(5))
                         longestBlueHourStreak = streakOfBlueHours;
                     }
                 } else {
@@ -114,33 +132,49 @@ class PullLocalWeather {
             totalHours++;
             return weatherObjects;
         })
-        console.log("Weather Objects Follow");
+        //console.log("Weather Objects Follow");
         //console.dir(weatherObjects);
         this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
         this.printCast(weatherObjects);
         return weatherObjects;
     }
 
-    getDayOfWeek = (numericalDate, returnShort)=> {
-        //given the current date, calculate a day of the week
-        let currentYear = new Date().getFullYear(); //first find the year          
+    getYear = () => { //run this method to get the year expected in createDateObject
+        return new Date().getFullYear();
+    }
 
-        let dateObj = new Date(currentYear + "-" + numericalDate); //then great a Date Object 
-        let timezoneOffeset = dateObj.getTimezoneOffset(); //figure out the timezone offset in the user's timezone
+    getNumericalDate = timeArray => {
+        return timeArray[0].substring(5)
+    }
+
+    createDateObject = (numericalDate, currentYear) => { //expects a Numerical Date e.g. 08-12 and currentYear e.g. 2023.
+        return new Date(currentYear + "-" + numericalDate)
+    }
+
+    getTimezone = dateObj => { // expects a Date Object input e.g.: Wed Aug 16 2023 17:00:00 GMT-0700 (Pacific Daylight Time)
+        //console.log(dateObj)
+        return dateObj.getTimezoneOffset(); 
+    }
+
+    getDayOfWeek = numericalDate => { //getDayOfWeek expects a 5 character string e.g. 08-27 for August 27th and returns e.g. Wed for Wednesday
+        //given the current date, calculate a day of the week
+        let currentYear = this.getYear(); //first find the year          
+
+        let dateObj = this.createDateObject(numericalDate, currentYear); //then create a Date Object that combines the year and the 5 character numerical date we took into this method
+        //console.log(dateObj)
+        let timezoneOffeset = this.getTimezone(dateObj) //figure out the timezone offset in the user's timezone
 
         dateObj.setMinutes(dateObj.getMinutes() + timezoneOffeset) //adjust the minutes in that Date object to account for that offset. 
         //Failure to do this will e.g.lead to data from PDT showing up as 17: 00 on the day before because 24 - 7(the offset at time of writing) = 17!
         let date = dateObj.toString(); //convert the date object to a string so that you can take a substring from it
 
-        
         //console.log("Date is: " + dateObj + " Logged Date is: " + object.date + " Logged Time is: " + object.time)
         let dayOfWeek = date.substring(0, 3); //grab just the first 3 characters of the date string e.g. SUN, MON etc
-
-        
 
         return dayOfWeek
     }
 
+    //this function handles the summary that's printed at the top of the forecast
     printSummary = (countOfBlueHours, dayWithLongestStreak, longestStreakCount, totalHours) => {
         const weatherSummary = document.querySelector("#weather-summary");
         let hourOrHours = "";
@@ -150,13 +184,13 @@ class PullLocalWeather {
             hourOrHours = "hours"
         }
 
-        let percentOfBlueHours = longestStreakCount / totalHours * 100
-        percentOfBlueHours = percentOfBlueHours.toFixed(1);
+        let percentOfBlueHours = longestStreakCount / totalHours * 1000
+        percentOfBlueHours = percentOfBlueHours.toFixed(0);
 
         if (countOfBlueHours > 0) {
             weatherSummary.insertAdjacentHTML("beforeend", `
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
-            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><b>${countOfBlueHours} blue / ${totalHours} total = ${percentOfBlueHours}%</b></div>
+            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${percentOfBlueHours}</h1><b>${countOfBlueHours} / ${totalHours} </b><br/></div>
 
             `)
         } else {
@@ -166,7 +200,7 @@ class PullLocalWeather {
     }
 
     printCast = objects => {
-        console.dir(objects);
+        //console.dir(objects);
         let gridContainer = document.getElementById("grid");
 
         // Iterate through the array and create a grid cell for each object

@@ -168,8 +168,9 @@ h3 {
     margin: 0;
     font-weight: bold;
     padding: 7px;
-    text-align: justify;
+    text-align: center;
     font-size: 1em;
+    width:100%
 }
 
 p {
