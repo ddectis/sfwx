@@ -96,13 +96,13 @@ class PullLocalWeather {
 
                 //check which day the current period belongs to
                 currentDayBeingTabulated = this.getDayOfWeek(this.getNumericalDate(entryTime))
-                
+                //check to see if the day has changed since the last period
                 if (currentDayBeingTabulated !== lastDayTabulated && periodIndex !== 0) {
-                    const newDailyBlueHourCount = {
-                        [lastDayTabulated]: dailyBlueHours
+                    const newDailyBlueHourCount = {         //if so, then log the count of blue hours from the previous day to a new object
+                        [lastDayTabulated]: dailyBlueHours  
                     }
-                    dailySummary = { ...dailySummary, ...newDailyBlueHourCount }
-                    dailyBlueHours = 0;
+                    dailySummary = { ...dailySummary, ...newDailyBlueHourCount }    //and spread it into the dailySummary object
+                    dailyBlueHours = 0; //reset the blue hours so that the next day begins at 0
                     console.log("the day has advanced")
                     console.log(dailySummary)
                 }
@@ -154,16 +154,17 @@ class PullLocalWeather {
                 weatherObjects.push(obj);   //add the new object to the array that stores the forecast objects
                 lastDayTabulated = currentDayBeingTabulated;
                 periodIndex++;
+                totalHours++;
             }
 
-            totalHours++;
+
             return weatherObjects;
         })
 
         console.log(dailySummary)
         //console.log("Weather Objects Follow");
         //console.dir(weatherObjects);
-        this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
+        this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours, dailySummary)
         this.printCast(weatherObjects);
         return weatherObjects;
     }
@@ -204,7 +205,7 @@ class PullLocalWeather {
     }
 
     //this function handles the summary that's printed at the top of the forecast
-    printSummary = (countOfBlueHours, dayWithLongestStreak, longestStreakCount, totalHours) => {
+    printSummary = (countOfBlueHours, dayWithLongestStreak, longestStreakCount, totalHours, dailySummary) => {
         const weatherSummary = document.querySelector("#weather-summary");
         let hourOrHours = "";
         if (longestStreakCount === 1) {
@@ -212,18 +213,29 @@ class PullLocalWeather {
         } else {
             hourOrHours = "hours"
         }
-        
+
+
         
         let percentOfBlueHours = countOfBlueHours / totalHours * 100
         percentOfBlueHours = percentOfBlueHours.toFixed(0);
         
 
         if (countOfBlueHours > 0) {
+            
             weatherSummary.insertAdjacentHTML("beforeend", `
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
             <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${percentOfBlueHours}</h1><b>${countOfBlueHours} blue / ${totalHours} total</b><br/></div>
-
+            <div class="forecast-summary-entry flex flex-column" id="daily-summary"><div class="daily-blue-hours"><div class="daily-blue-entry">Day</div> <div>Blue Hours</div></div>
             `)
+
+            const dailySummaryId = document.querySelector("#daily-summary")
+            const entries = Object.entries(dailySummary)
+            entries.forEach(([key, value]) => {
+                dailySummaryId.insertAdjacentHTML("beforeend", `<div class="daily-blue-hours"><div class="daily-blue-entry">${key}</div><div class="daily-blue-entry">${value}</div></div>`) 
+            })
+
+
+            
         } else {
             weatherSummary.insertAdjacentHTML("beforeend", `<li>There are ZERO blue hours in the forecast!</li>`)
         }

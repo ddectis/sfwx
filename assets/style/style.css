@@ -342,6 +342,24 @@ label {
     width: 100%;
 }
 
+.flex{
+    display:flex;
+}
+
+.flex-column{
+    flex-direction:column;
+}
+
+.daily-blue-hours {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.daily-blue-entry{
+    padding-inline:20%;
+}
+
 .border-radius {
     border-radius: 20px;
 }
