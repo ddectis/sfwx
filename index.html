@@ -33,7 +33,11 @@
                 <h2>Sunset + Richmond Forecast</h2>
                 <div class="weather-summary" id="weather-summary">
                 </div>
-
+                <div class="weather-chart-holder">
+                    <h1>Weekly Overview</h1>
+                    <canvas id="weather-chart"></canvas>
+                </div>
+                
 
                 <div class="blue-info-container">
                     <h3>What is a Blue Hour?</h3>
@@ -79,6 +83,8 @@
 
         <div class="grid" id="grid"></div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="./assets/scripts/index.js?13"></script>
 </body>
 </html>

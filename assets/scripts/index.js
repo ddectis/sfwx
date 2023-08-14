@@ -16,13 +16,13 @@ class FindGrid {
 
 class PullLocalWeather {
     pullCast = () => {
-        let useCachedForecast = false;
+        let useCachedForecast = false;  //by default, we want to try to use the most recent forecast data
         const weatherSummary = document.querySelector("#weather-summary");
-        weatherSummary.insertAdjacentHTML("beforeend",`<h2>Fetching Forecast Data...</h2>`)
+        weatherSummary.insertAdjacentHTML("beforeend",`<h2>Fetching Forecast Data...</h2>`) //indicate to the user that we're fetching the data
         fetch(hourlyRequestUrl)                           //fetch the requestURL that's been preconfigured to pull the expected weather grid
             .then(response => {
                 if (response.status === 200) { //check the response status 
-                    return response.json();     
+                    return response.json();  //parse it to a JSON if you get a 200 OK   
                 } else {                        //if it's not 200 / OK, then indicate that we need to use the cached forecast
                     useCachedForecast = true;
                     //console.log("Use Cached Forecast!")
@@ -77,17 +77,38 @@ class PullLocalWeather {
             lastUpdated.insertAdjacentHTML("beforeend",`<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
         }
 
-        let countOfBlueHours = 0 //keep track of how many of the forecast hours are "blue" i.e. good conditions
-        let streakOfBlueHours = 0; //every consecutive blue hour adds 1 to the streak, a nonblue hour sets it back to 0
-        let longestBlueHourStreak = 0;
-        let dayWithLongestBlueStreak = ``;
-        let totalHours = 0;
+        let countOfBlueHours = 0            //keep track of how many of the forecast hours are "blue" i.e. good conditions
+        let streakOfBlueHours = 0;          //every consecutive blue hour adds 1 to the streak, a nonblue hour sets it back to 0
+        let longestBlueHourStreak = 0;      //store the longest streak here
+        let dayWithLongestBlueStreak = ``;  //store the day with the longest streak here
+        let totalHours = 0;                 //keep track of the sum of blue hours in the whole week
+        let currentDayBeingTabulated = ``;  //use this value as the periods.forEach loop goes through each period. Check to see when it changes and then tabulate how many blue hours each day has
+        let lastDayTabulated = ``;          //when currentDay is not = lastDay, we know that the day has changed
+        let periodIndex = 0;
+        let dailyBlueHours = 0;
+        let dailySummary = {                //this object will store the count of blue hours in each day. Used to create a daily summary grap
+        }
 
         periods.forEach(period => {         //iterate over each period
             if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
                 let f = period.dewpoint.value * 9 / 5 + 32; //convert the C value we will receive into an F value
                 let entryTime = period.startTime.split("T"); //split period.startTime into an array that splits at T
+
+                //check which day the current period belongs to
+                currentDayBeingTabulated = this.getDayOfWeek(this.getNumericalDate(entryTime))
+                //check to see if the day has changed since the last period
+                if (currentDayBeingTabulated !== lastDayTabulated && periodIndex !== 0) {
+                    const newDailyBlueHourCount = {         //if so, then log the count of blue hours from the previous day to a new object
+                        [lastDayTabulated]: dailyBlueHours  
+                    }
+                    dailySummary = { ...dailySummary, ...newDailyBlueHourCount }    //and spread it into the dailySummary object
+                    dailyBlueHours = 0; //reset the blue hours so that the next day begins at 0
+                    console.log("the day has advanced")
+                    console.log(dailySummary)
+                }
+                console.log(currentDayBeingTabulated)
                 
+
                 let tempDewDelta = period.temperature - f; //compare the current temperature to the dewpoint and record the delta
                 let windSpeed = period.windSpeed.substring(0, 2); //.eriod.windSpeed comes with "mph". This gets rid of it.
                 let goodConditions = false;
@@ -100,6 +121,10 @@ class PullLocalWeather {
                 if (windSpeed < windThreshold && tempDewDelta > dewDeltaThreshold || period.temperature > temperatureThreshold) {
                     goodConditions = true;
                     countOfBlueHours++;
+                    
+                    //add a blue hour to the current day being tabulated
+                    dailyBlueHours++;
+
                     streakOfBlueHours++;
                     if (streakOfBlueHours > longestBlueHourStreak) {
                         dayWithLongestBlueStreak = this.getDayOfWeek(this.getNumericalDate(entryTime))
@@ -115,7 +140,7 @@ class PullLocalWeather {
                     //console.log("We appended a 0 to the front of a < 10 windspeed and got: " + windSpeed)
                 }
 
-                //create a new object for each iteration
+                //create a new object for each iteration. Each of these objects corresponds to one hour within the forecast. We'll have 156 of these in total
                 let obj = {
 
                     date: entryTime[0].substring(5),
@@ -127,15 +152,21 @@ class PullLocalWeather {
                     goodConditions: goodConditions
                 }
                 weatherObjects.push(obj);   //add the new object to the array that stores the forecast objects
+                lastDayTabulated = currentDayBeingTabulated;
+                periodIndex++;
+                totalHours++;
             }
 
-            totalHours++;
+
             return weatherObjects;
         })
+
+        console.log(dailySummary)
         //console.log("Weather Objects Follow");
         //console.dir(weatherObjects);
-        this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
+        this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours, dailySummary)
         this.printCast(weatherObjects);
+        this.createChart(dailySummary)
         return weatherObjects;
     }
 
@@ -143,8 +174,8 @@ class PullLocalWeather {
         return new Date().getFullYear();
     }
 
-    getNumericalDate = timeArray => {
-        return timeArray[0].substring(5)
+    getNumericalDate = timeArray => { //takes in the split entry time value which is mapped into an array. We take the first 5 character of the first index value of that array and
+        return timeArray[0].substring(5) //e.g. returns 08-13 on August 13
     }
 
     createDateObject = (numericalDate, currentYear) => { //expects a Numerical Date e.g. 08-12 and currentYear e.g. 2023.
@@ -175,7 +206,7 @@ class PullLocalWeather {
     }
 
     //this function handles the summary that's printed at the top of the forecast
-    printSummary = (countOfBlueHours, dayWithLongestStreak, longestStreakCount, totalHours) => {
+    printSummary = (countOfBlueHours, dayWithLongestStreak, longestStreakCount, totalHours, dailySummary) => {
         const weatherSummary = document.querySelector("#weather-summary");
         let hourOrHours = "";
         if (longestStreakCount === 1) {
@@ -183,20 +214,22 @@ class PullLocalWeather {
         } else {
             hourOrHours = "hours"
         }
-
-        let percentOfBlueHours = longestStreakCount / totalHours * 1000
+        
+        let percentOfBlueHours = countOfBlueHours / totalHours * 100
         percentOfBlueHours = percentOfBlueHours.toFixed(0);
+        
 
         if (countOfBlueHours > 0) {
             weatherSummary.insertAdjacentHTML("beforeend", `
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
-            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${percentOfBlueHours}</h1><b>${countOfBlueHours} / ${totalHours} </b><br/></div>
-
+            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${percentOfBlueHours}</h1><b>${countOfBlueHours} blue / ${totalHours} total</b><br/></div>
+            
             `)
+
         } else {
             weatherSummary.insertAdjacentHTML("beforeend", `<li>There are ZERO blue hours in the forecast!</li>`)
         }
-        
+
     }
 
     printCast = objects => {
@@ -258,21 +291,53 @@ class PullLocalWeather {
                             <img class="${object.windDirection} arrow" src="./assets/img/pointer-${qualityCategory}.png" alt="^" style="height: ${scale}px;"></div>
                         </div>
                     </div>
-
                 `;
 
             // Append the cell to the grid container
             gridContainer.appendChild(cell);
+            
         }
 
         //create a new instance of the class and run the instantiate function
         const filter = new FilterDaysOfWeek;
         filter.instantiateFilterButtons();
-
+        
 
     }
 
+    createChart = dailySummary => {
+        const weatherChart = document.getElementById('weather-chart');
+        console.log(dailySummary);
+        new Chart(weatherChart, {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    data: dailySummary,
+                    backgroundColor: '#6495ed'
+                    
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
 
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max:10
+                    }
+                },
+                layout: {
+                    padding: 20
+                }
+            }
+        });
+    }
 
 }
 
@@ -311,12 +376,7 @@ class FilterDaysOfWeek {
                 this.filter(event.srcElement.innerHTML)
             })
         })
-
-        
-
     }
-
-    
 
     filter = day => {
 
