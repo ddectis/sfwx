@@ -166,6 +166,7 @@ class PullLocalWeather {
         //console.dir(weatherObjects);
         this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours, dailySummary)
         this.printCast(weatherObjects);
+        this.createChart(dailySummary)
         return weatherObjects;
     }
 
@@ -213,33 +214,22 @@ class PullLocalWeather {
         } else {
             hourOrHours = "hours"
         }
-
-
         
         let percentOfBlueHours = countOfBlueHours / totalHours * 100
         percentOfBlueHours = percentOfBlueHours.toFixed(0);
         
 
         if (countOfBlueHours > 0) {
-            
             weatherSummary.insertAdjacentHTML("beforeend", `
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
             <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${percentOfBlueHours}</h1><b>${countOfBlueHours} blue / ${totalHours} total</b><br/></div>
-            <div class="forecast-summary-entry flex flex-column" id="daily-summary"><div class="daily-blue-hours"><div class="daily-blue-entry">Day</div> <div>Blue Hours</div></div>
+            
             `)
 
-            const dailySummaryId = document.querySelector("#daily-summary")
-            const entries = Object.entries(dailySummary)
-            entries.forEach(([key, value]) => {
-                dailySummaryId.insertAdjacentHTML("beforeend", `<div class="daily-blue-hours"><div class="daily-blue-entry">${key}</div><div class="daily-blue-entry">${value}</div></div>`) 
-            })
-
-
-            
         } else {
             weatherSummary.insertAdjacentHTML("beforeend", `<li>There are ZERO blue hours in the forecast!</li>`)
         }
-        
+
     }
 
     printCast = objects => {
@@ -301,21 +291,53 @@ class PullLocalWeather {
                             <img class="${object.windDirection} arrow" src="./assets/img/pointer-${qualityCategory}.png" alt="^" style="height: ${scale}px;"></div>
                         </div>
                     </div>
-
                 `;
 
             // Append the cell to the grid container
             gridContainer.appendChild(cell);
+            
         }
 
         //create a new instance of the class and run the instantiate function
         const filter = new FilterDaysOfWeek;
         filter.instantiateFilterButtons();
-
+        
 
     }
 
+    createChart = dailySummary => {
+        const weatherChart = document.getElementById('weather-chart');
+        console.log(dailySummary);
+        new Chart(weatherChart, {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    data: dailySummary,
+                    backgroundColor: '#6495ed'
+                    
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
 
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max:10
+                    }
+                },
+                layout: {
+                    padding: 20
+                }
+            }
+        });
+    }
 
 }
 
@@ -354,12 +376,7 @@ class FilterDaysOfWeek {
                 this.filter(event.srcElement.innerHTML)
             })
         })
-
-        
-
     }
-
-    
 
     filter = day => {
 
