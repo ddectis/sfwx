@@ -218,17 +218,17 @@ class PullLocalWeather {
         let percentOfBlueHours = countOfBlueHours / totalHours * 100
         percentOfBlueHours = percentOfBlueHours.toFixed(0);
         let grade = ``;
-        if (countOfBlueHours <= 5) {
+        if (countOfBlueHours <= 7) {
             grade = `F`
-        } else if (countOfBlueHours > 10 && countOfBlueHours <= 15) {
+        } else if (countOfBlueHours > 14 && countOfBlueHours <= 21) {
             grade = `D`
-        } else if (countOfBlueHours > 15 && countOfBlueHours <= 20) {
+        } else if (countOfBlueHours > 21 && countOfBlueHours <= 28) {
             grade = `C`
-        } else if (countOfBlueHours > 20 && countOfBlueHours <= 25) {
+        } else if (countOfBlueHours > 28 && countOfBlueHours <= 35) {
             grade = `B`
-        } else if (countOfBlueHours > 25 && countOfBlueHours <= 30) {
+        } else if (countOfBlueHours > 35 && countOfBlueHours <= 42) {
             grade = `A`
-        } else if (countOfBlueHours > 30) {
+        } else if (countOfBlueHours > 42) {
             grade = `A+`
         }
 
@@ -286,15 +286,15 @@ class PullLocalWeather {
                     <div class="weather-data">
                         <div class="weather-temperature">
                             <div class="weather-item">
-                                <div>TEMP</div>
+                                <div><u>TEMP</u></div>
                                 <div>${object.temperature}</div>
                             </div>
                             <div class="weather-item">
-                                <div>DEW</div>
+                                <div><u>DEW</u></div>
                                 <div>${object.dewpoint}</div>
                             </div>
                             <div class="weather-item">
-                                <div>WIND</div>
+                                <div><u>WIND</u></div>
                                 <div>${object.windSpeed}</div>
                             </div>
 
@@ -326,7 +326,7 @@ class PullLocalWeather {
             data: {
                 datasets: [{
                     data: dailySummary,
-                    backgroundColor: '#6495ed'
+                    backgroundColor: '#6495ed',
                     
                 }]
             },
@@ -342,14 +342,24 @@ class PullLocalWeather {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max:10
+                        max: 10,
+                        title: {
+                            display: true,
+                            text: 'Blue Hours',
+                        }
                     }
                 },
                 layout: {
                     padding: 20,
                     
                 },
-                height: 400,
+                barBorderWidth: 1,
+                barBorderColor: 'black',
+                barBorderRadius: 1,
+                maintainAspectRatio: false,
+                responseive: true,
+                      
+                
                 
             }
         });
