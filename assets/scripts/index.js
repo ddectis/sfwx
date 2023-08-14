@@ -217,12 +217,25 @@ class PullLocalWeather {
         
         let percentOfBlueHours = countOfBlueHours / totalHours * 100
         percentOfBlueHours = percentOfBlueHours.toFixed(0);
-        
+        let grade = ``;
+        if (countOfBlueHours <= 5) {
+            grade = `F`
+        } else if (countOfBlueHours > 10 && countOfBlueHours <= 15) {
+            grade = `D`
+        } else if (countOfBlueHours > 15 && countOfBlueHours <= 20) {
+            grade = `C`
+        } else if (countOfBlueHours > 20 && countOfBlueHours <= 25) {
+            grade = `B`
+        } else if (countOfBlueHours > 25 && countOfBlueHours <= 30) {
+            grade = `A`
+        } else if (countOfBlueHours > 30) {
+            grade = `A+`
+        }
 
         if (countOfBlueHours > 0) {
             weatherSummary.insertAdjacentHTML("beforeend", `
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
-            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${percentOfBlueHours}</h1><b>${countOfBlueHours} blue / ${totalHours} total</b><br/></div>
+            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${countOfBlueHours}  ${grade}</h1></div>
             
             `)
 
@@ -333,8 +346,11 @@ class PullLocalWeather {
                     }
                 },
                 layout: {
-                    padding: 20
-                }
+                    padding: 20,
+                    
+                },
+                height: 400,
+                
             }
         });
     }
