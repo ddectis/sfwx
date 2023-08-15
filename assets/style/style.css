@@ -127,7 +127,7 @@ ol, ul {
     display: flex;
     justify-content: space-around;
     flex-direction: row;
-    width: 100%;
+    width: 120%;
     align-items: center;
     max-width: 400px;
     padding: 10px;
@@ -199,7 +199,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width:90%;
+    width:100%;
 }
 
 h1 {

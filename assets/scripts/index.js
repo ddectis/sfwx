@@ -236,7 +236,7 @@ class PullLocalWeather {
             weatherSummary.insertAdjacentHTML("beforeend", `
             <h2>Sunset + Richmond Forecast</h2>
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
-            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${countOfBlueHours}  ${grade}</h1></div>
+            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${countOfBlueHours}  (${grade})</h1></div>
             
             `)
 
