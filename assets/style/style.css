@@ -19,7 +19,7 @@ body {
 }
 
 .app {
-    max-width: 450px;
+    
 }
 
 button {
@@ -146,6 +146,13 @@ ol, ul {
     box-shadow: 0px 7px 4px 0px #00000096;
 }
 
+.summary-holder {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 li {
     padding-block: 3px;
     font-size: 13px;
@@ -176,7 +183,7 @@ img {
 
 .weather-summary {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
 }
@@ -196,10 +203,11 @@ body {
 }
 
 h1 {
-    display: flex;
     justify-content: center;
     font-size: 2.5em;
     margin: 0;
+    text-align: center;
+    font-weight: bold;
 }
 
 h3 {
@@ -216,7 +224,7 @@ p {
     text-align: center;
     display: flex;
     justify-content: center;
-    font-size: 0.75em;
+    font-size: 1em;
     max-width: 90%;
 }
 
@@ -468,47 +476,39 @@ label {
     border-radius: 5px;
 }
 
-/*
-
-@media screen and (min-width: 700px) {
-    .grid-cell {
-        
-        
-        
-    }
-
-    .sub-title {
-        display: flex;
-        flex-direction:unset;
-        justify-content: center;
-        border: solid black 2px;
-        align-items: center;
-    }
-
-    .intro-text {
-        
-        max-width: 50%;
-    }
-
-    .sub-title img {
-        max-height: 250px;
-    }
-
-    .weather-entry {
-        flex-direction: row;
-        align-items: center;
-        
-    }
-
-    .weather-data{
-        justify-content:space-around;
-    }
-
-    .weather-time{
-        min-width:33%;
-    }
+.detailed-forecast-holder {
+    border: solid #d7d7d7 2px;
+    border-radius: 20px;
+    padding-inline: 10px;
 }
-    */
+
+@media screen and (min-width:700px){
+    .summary-holder{
+        flex-direction:row;
+    }
+
+    .weather-chart-outline{
+        width:45%
+    }
+
+    li{
+        font-size:25px;
+    }
+
+    .blue-params{
+        height:100px;
+    }
+
+    .param-container{
+        max-width:700px;
+    }
+
+    .blue-info-container{
+        max-width:850px;
+    }
+
+}
+
 .hide {
     display: none;
 }

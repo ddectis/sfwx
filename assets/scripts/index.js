@@ -72,7 +72,7 @@ class PullLocalWeather {
         //console.log(updateTime[0].substring(5));
         //console.log(updateDate)
 
-        lastUpdated.innerHTML = `<p>Forecast Data Last Updated: ${updateDayOfWeek} @ ${updateHours}:${updateDateObject.getMinutes()} ${amPM} </p>`
+        lastUpdated.innerHTML = `<p>Data Updated @ ${updateHours}:${updateDateObject.getMinutes()} ${amPM} </p>`
         if (usingCache) {
             lastUpdated.insertAdjacentHTML("beforeend",`<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
         }
@@ -234,6 +234,7 @@ class PullLocalWeather {
 
         if (countOfBlueHours > 0) {
             weatherSummary.insertAdjacentHTML("beforeend", `
+            <h2>Sunset + Richmond Forecast</h2>
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
             <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${countOfBlueHours}  ${grade}</h1></div>
             

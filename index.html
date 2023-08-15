@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./assets/style/style.css?19" />
+    <link rel="stylesheet" href="./assets/style/style.css?20" />
      <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Danometer - SF West Side Prognostication</title>
     <title></title>
@@ -35,16 +35,21 @@
             <div class="blue border-radius default-border">
 
                 <button id="info-toggle" class="info-button">i</button>
-                <h2>Sunset + Richmond Forecast</h2>
-                <div class="weather-summary" id="weather-summary">
-                </div>
-                <div class="weather-chart-outline">
-                    <h2>Weekly Overview</h2>
-                    <div class="weather-chart-holder">
-                        
-                        <canvas id="weather-chart"></canvas>
+                
+                <div class="summary-holder">
+                    
+                    <div class="weather-summary" id="weather-summary">
+                        <h2>Sunset + Richmond Forecast</h2>
+                    </div>
+                    <div class="weather-chart-outline">
+                        <h2>Weekly Overview</h2>
+                        <div class="weather-chart-holder">
+
+                            <canvas id="weather-chart"></canvas>
+                        </div>
                     </div>
                 </div>
+                
                 
                 
 
@@ -74,27 +79,30 @@
             </div>
 
         </div>
+        <div class="detailed-forecast-holder">
+            <h1>Detailed Forecast</h1>
+            <div class="filter-holder">
+                <p>Filter day of the week</p>
 
-        <div class="filter-holder">
-            <p>Filter day of the week</p>
-
-            <div class="days-of-week">
+                <div class="days-of-week">
 
 
-                <button id="sunday">Sunday</button>
-                <button id="monday">Monday</button>
-                <button id="tuesday">Tuesday</button>
-                <button id="wednesday">Wednesday</button>
-                <button id="thursday">Thursday</button>
-                <button id="friday">Friday</button>
-                <button id="saturday">Saturday</button>
-                <button id="all-days">All</button>
+                    <button id="sunday">Sunday</button>
+                    <button id="monday">Monday</button>
+                    <button id="tuesday">Tuesday</button>
+                    <button id="wednesday">Wednesday</button>
+                    <button id="thursday">Thursday</button>
+                    <button id="friday">Friday</button>
+                    <button id="saturday">Saturday</button>
+                    <button id="all-days">All</button>
+                </div>
+                <label><input type="checkbox" id="only-blue-hours" />Show Only Blue Hours</label>
             </div>
-            <label><input type="checkbox" id="only-blue-hours" />Show Only Blue Hours</label>
+
+
+            <div class="grid" id="grid"></div>
         </div>
-
-
-        <div class="grid" id="grid"></div>
+        
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
