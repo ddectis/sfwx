@@ -18,7 +18,7 @@ class PullLocalWeather {
     pullCast = () => {
         let useCachedForecast = false;  //by default, we want to try to use the most recent forecast data
         const weatherSummary = document.querySelector("#weather-summary");
-        weatherSummary.insertAdjacentHTML("beforeend",`<h2>Fetching Forecast Data...</h2>`) //indicate to the user that we're fetching the data
+        weatherSummary.insertAdjacentHTML("beforeend", `<h2>Fetching Forecast Data...</h2>`) //indicate to the user that we're fetching the data
         fetch(hourlyRequestUrl)                           //fetch the requestURL that's been preconfigured to pull the expected weather grid
             .then(response => {
                 if (response.status === 200) { //check the response status 
@@ -62,7 +62,7 @@ class PullLocalWeather {
         //console.log(updateDateObject)
 
         let updateHours = updateDateObject.getHours() //pull out the hours from the newly created Date object
-        let amPM = "AM" 
+        let amPM = "AM"
         if (updateHours > 12) { //the NWS API returns the time in 24 hours, so check to see if it's the afternoon
             amPM = "PM"         //if so, set the text to indicate
             updateHours -= 12   //and subtract 12 hours from the time so we can print something like 4:00 PM instead of 16:00
@@ -74,7 +74,7 @@ class PullLocalWeather {
 
         lastUpdated.innerHTML = `<p>Data Updated @ ${updateHours}:${updateDateObject.getMinutes()} ${amPM} </p>`
         if (usingCache) {
-            lastUpdated.insertAdjacentHTML("beforeend",`<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
+            lastUpdated.insertAdjacentHTML("beforeend", `<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
         }
 
         let countOfBlueHours = 0            //keep track of how many of the forecast hours are "blue" i.e. good conditions
@@ -85,29 +85,31 @@ class PullLocalWeather {
         let currentDayBeingTabulated = ``;  //use this value as the periods.forEach loop goes through each period. Check to see when it changes and then tabulate how many blue hours each day has
         let lastDayTabulated = ``;          //when currentDay is not = lastDay, we know that the day has changed
         let periodIndex = 0;
+        let dayIndex = 0;                   //this value increases by 1 every time we detect that the parser has advanced to the next day
         let dailyBlueHours = 0;
-        let dailySummary = {                //this object will store the count of blue hours in each day. Used to create a daily summary grap
-        }
+        let dailySummary = {}                //this object will store the count of blue hours in each day. Used to create a daily summary grap
+        let dailySummaryDetail = [];         //this object will store the list of blue hours for each day in an object to feed to the charts.js bubble chart
 
         periods.forEach(period => {         //iterate over each period
             if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
                 let f = period.dewpoint.value * 9 / 5 + 32; //convert the C value we will receive into an F value
                 let entryTime = period.startTime.split("T"); //split period.startTime into an array that splits at T
-
+                //console.log(entryTime)
                 //check which day the current period belongs to
                 currentDayBeingTabulated = this.getDayOfWeek(this.getNumericalDate(entryTime))
                 //check to see if the day has changed since the last period
                 if (currentDayBeingTabulated !== lastDayTabulated && periodIndex !== 0) {
                     const newDailyBlueHourCount = {         //if so, then log the count of blue hours from the previous day to a new object
-                        [lastDayTabulated]: dailyBlueHours  
+                        [lastDayTabulated]: dailyBlueHours
                     }
                     dailySummary = { ...dailySummary, ...newDailyBlueHourCount }    //and spread it into the dailySummary object
                     dailyBlueHours = 0; //reset the blue hours so that the next day begins at 0
                     console.log("the day has advanced")
+                    dayIndex++;
                     console.log(dailySummary)
                 }
-                console.log(currentDayBeingTabulated)
-                
+                //console.log(currentDayBeingTabulated)
+
 
                 let tempDewDelta = period.temperature - f; //compare the current temperature to the dewpoint and record the delta
                 let windSpeed = period.windSpeed.substring(0, 2); //.eriod.windSpeed comes with "mph". This gets rid of it.
@@ -121,9 +123,22 @@ class PullLocalWeather {
                 if (windSpeed < windThreshold && tempDewDelta > dewDeltaThreshold || period.temperature > temperatureThreshold) {
                     goodConditions = true;
                     countOfBlueHours++;
-                    
+
                     //add a blue hour to the current day being tabulated
                     dailyBlueHours++;
+                    let currentBlueHour = parseInt(entryTime[1].substring(0, 2))
+                    
+                    console.log(currentBlueHour)
+
+                    let obj = {
+                        x: dayIndex,
+                        y: currentBlueHour,
+                        r: 10
+                    }
+
+                    dailySummaryDetail.push(obj);
+
+                    //console.log(dailySummaryDetail)
 
                     streakOfBlueHours++;
                     if (streakOfBlueHours > longestBlueHourStreak) {
@@ -166,7 +181,7 @@ class PullLocalWeather {
         //console.dir(weatherObjects);
         this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours, dailySummary)
         this.printCast(weatherObjects);
-        this.createChart(dailySummary)
+        this.createChart(dailySummary, dailySummaryDetail)
         return weatherObjects;
     }
 
@@ -184,7 +199,7 @@ class PullLocalWeather {
 
     getTimezone = dateObj => { // expects a Date Object input e.g.: Wed Aug 16 2023 17:00:00 GMT-0700 (Pacific Daylight Time)
         //console.log(dateObj)
-        return dateObj.getTimezoneOffset(); 
+        return dateObj.getTimezoneOffset();
     }
 
     getDayOfWeek = numericalDate => { //getDayOfWeek expects a 5 character string e.g. 08-27 for August 27th and returns e.g. Wed for Wednesday
@@ -214,7 +229,7 @@ class PullLocalWeather {
         } else {
             hourOrHours = "hours"
         }
-        
+
         let percentOfBlueHours = countOfBlueHours / totalHours * 100
         percentOfBlueHours = percentOfBlueHours.toFixed(0);
         let grade = ``;
@@ -269,8 +284,8 @@ class PullLocalWeather {
                 //console.log("category 0");
                 qualityCategory = 0;
             }
-                
-        
+
+
             if (!object.goodConditions) {
                 //this is the not so good category
                 //console.log("category 1");
@@ -278,7 +293,7 @@ class PullLocalWeather {
             }
 
             let dayOfWeek = this.getDayOfWeek(object.date);
-            
+
 
             // Populate the cell with object data
             cell.innerHTML = `
@@ -309,17 +324,17 @@ class PullLocalWeather {
 
             // Append the cell to the grid container
             gridContainer.appendChild(cell);
-            
+
         }
 
         //create a new instance of the class and run the instantiate function
         const filter = new FilterDaysOfWeek;
         filter.instantiateFilterButtons();
-        
+
 
     }
 
-    createChart = dailySummary => {
+    createChart = (dailySummary, dailySummaryDetail) => {
         const weatherChart = document.getElementById('weather-chart');
         console.log(dailySummary);
         new Chart(weatherChart, {
@@ -328,7 +343,7 @@ class PullLocalWeather {
                 datasets: [{
                     data: dailySummary,
                     backgroundColor: '#6495ed',
-                    
+
                 }]
             },
             options: {
@@ -352,19 +367,72 @@ class PullLocalWeather {
                 },
                 layout: {
                     padding: 20,
-                    
+
                 },
                 barBorderWidth: 1,
                 barBorderColor: 'black',
                 barBorderRadius: 1,
                 maintainAspectRatio: false,
                 responseive: true,
-                      
-                
-                
+
+
+
             }
         });
+       
+        const weatherBubbleChart = document.getElementById('weather-bubble-chart');
+        new Chart(weatherBubbleChart, {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: 'First Dataset',
+                    data: dailySummaryDetail,
+                    backgroundColor: 'rgb(100 149 237)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        
+                        reverse: true,
+                        min: 0,
+                        max: 24,
+                        ticks: {
+                            autoSkip: false,
+                            stepSize: 4,
+                            major: {
+                                enabled: true,
+                                stepSize: 1
+                            },
+
+                            
+                        }
+                    },
+                    x: {
+                        min: 0,
+                        max: 6,
+                        ticks: {
+                            stepSize: 1
+                        }
+                        
+                    }
+                },
+                elements: {
+                    point: {
+                        pointStyle: 'rectRounded'
+                    }
+                },
+                maintainAspectRatio: false,
+                width: 200
+                
+            }
+        })
+
     }
+
+
+    
 
 }
 

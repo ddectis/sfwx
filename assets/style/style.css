@@ -62,8 +62,15 @@ canvas {
     height: 200px;
 }
 
-#weather-chart{
-    
+.detail-chart-holder{
+    width:35%;
+}
+
+.weather-charts-parent{
+
+}
+
+#weather-chart {
 }
 
 .info-button {
