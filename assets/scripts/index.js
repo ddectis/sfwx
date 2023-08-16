@@ -179,7 +179,7 @@ class PullLocalWeather {
         console.log(dailySummary)
         //console.log("Weather Objects Follow");
         //console.dir(weatherObjects);
-        this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours, dailySummary)
+        this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
         this.printCast(weatherObjects);
         this.createChart(dailySummary, dailySummaryDetail)
         return weatherObjects;
@@ -221,7 +221,7 @@ class PullLocalWeather {
     }
 
     //this function handles the summary that's printed at the top of the forecast
-    printSummary = (countOfBlueHours, dayWithLongestStreak, longestStreakCount, totalHours, dailySummary) => {
+    printSummary = (countOfBlueHours, dayWithLongestStreak, longestStreakCount, totalHours) => {
         const weatherSummary = document.querySelector("#weather-summary");
         let hourOrHours = "";
         if (longestStreakCount === 1) {
@@ -249,10 +249,10 @@ class PullLocalWeather {
 
         if (countOfBlueHours > 0) {
             weatherSummary.insertAdjacentHTML("beforeend", `
-            <h2>Sunset + Richmond Forecast</h2>
+            <h1>Sunset + Richmond Forecast</h1>
             <div class="forecast-summary-entry"><u>Best Looking Day:</u> <br/> On <b>${dayWithLongestStreak}</b> there will be <b>${longestStreakCount} blue ${hourOrHours}!</b></div>
-            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${countOfBlueHours}  (${grade})</h1></div>
-            
+            <div class="forecast-summary-entry"><u>Weekly Blue Score:</u> <br/><h1>${countOfBlueHours}</h1></div>
+            <div class="forecast-summary-entry"><u>Grade:</u> <br/><h1>${grade}</h1></div>
             `)
 
         } else {
@@ -344,13 +344,11 @@ class PullLocalWeather {
                 datasets: [{
                     data: dailySummary,
                     backgroundColor: '#6495ed',
-
                 }]
             },
             options: {
                 plugins: {
                     title: {
-
                     },
                     legend: {
                         display: false
@@ -359,7 +357,6 @@ class PullLocalWeather {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        
                         title: {
                             display: true,
                             text: 'Blue Hours',
@@ -404,6 +401,14 @@ class PullLocalWeather {
                                 enabled: true,
                                 stepSize: 1
                             },
+                            callback: function (val) {
+                                if (val > 12) {
+                                    val = val - 12;
+                                    return val + "PM"
+                                } else {
+                                    return val + "AM"
+                                }
+                            }
                         },    
                     },
                     x: {
