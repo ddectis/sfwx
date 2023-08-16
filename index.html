@@ -19,7 +19,7 @@
                     <h1><u>Danometer</u></h1>
                     <img class="cell" src="./assets/img/cell-1.jpg" alt="The map cell indicated on this page" />
                 </div>
-                
+
                 <div class="intro-text">
 
                     <h3>This forecast is based on the National Weather Service data for the Central + Outer Sunset. The goal here is to use that data to highlight hours conducive to clear skies.</h3>
@@ -35,23 +35,36 @@
             <div class="blue border-radius default-border">
 
                 <button id="info-toggle" class="info-button">i</button>
-                
+
                 <div class="summary-holder">
-                    
+
                     <div class="weather-summary" id="weather-summary">
-                        <h2>Sunset + Richmond Forecast</h2>
+                        <h1>Sunset + Richmond Forecast</h1>
                     </div>
                     <div class="weather-chart-outline">
                         <h2>Weekly Overview</h2>
-                        <div class="weather-chart-holder">
-
-                            <canvas id="weather-chart"></canvas>
+                        <div class="weather-charts-parent">
+                            <div class="weather-chart-holder">
+                                <div class="weather-chart-inner">
+                                    <p>Count</p>
+                                    <canvas id="weather-chart"></canvas>
+                                </div>
+                                
+                            </div>
+                            <div class="weather-chart-holder detail-chart-holder">
+                                <div class="weather-chart-inner">
+                                    <p>Distribution</p>
+                                    <canvas id="weather-bubble-chart"></canvas>
+                                </div>
+                                
+                            </div>
                         </div>
+
                     </div>
                 </div>
-                
-                
-                
+
+
+
 
                 <div class="blue-info-container">
                     <h2>What is a Blue Hour?</h2>
@@ -71,7 +84,7 @@
                         <p>Days with hours like these, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</p>
 
                     </div>
-                    
+
                 </div>
 
                 <h3 id="last-updated">Forecast Data Last Updated: </h3>
@@ -102,10 +115,11 @@
 
             <div class="grid" id="grid"></div>
         </div>
-        
+
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script type="module" src="./assets/scripts/index.js?21"></script>
 </body>
 </html>
