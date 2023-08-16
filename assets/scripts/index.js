@@ -405,6 +405,8 @@ class PullLocalWeather {
                                 if (val > 12) {
                                     val = val - 12;
                                     return val + "PM"
+                                } else if (val === 12) {
+                                    return val + "PM"
                                 } else {
                                     return val + "AM"
                                 }
