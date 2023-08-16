@@ -34,7 +34,8 @@ button {
 canvas {
     background: #d7d7d7;
     border-radius:10px;
-    aspect-ratio:unset
+    aspect-ratio:unset;
+    padding:10px;
 }
 
 .weather-chart-outline {
@@ -44,26 +45,33 @@ canvas {
     flex-direction: column;
     border: 1px solid black;
     border-radius: 10px;
-    padding: 10px;
+    padding-inline: 10px;
     box-shadow: 0px 7px 4px 0px #00000096;
    
 }
 
 .weather-chart-holder {
-
     display: flex;
     justify-content: center;
     margin-block: 10px;
     flex-direction: column;
-    
-    
     padding: 10px;
-    
     height: 200px;
+    border: 1px solid black;
+    border-radius:10px;
+    align-items:center;
 }
 
-.detail-chart-holder{
-    width:35%;
+.weather-chart-inner {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.detail-chart-holder {
 }
 
 .weather-charts-parent{

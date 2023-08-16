@@ -94,7 +94,7 @@ class PullLocalWeather {
             if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
                 let f = period.dewpoint.value * 9 / 5 + 32; //convert the C value we will receive into an F value
                 let entryTime = period.startTime.split("T"); //split period.startTime into an array that splits at T
-                //console.log(entryTime)
+                console.log(entryTime)
                 //check which day the current period belongs to
                 currentDayBeingTabulated = this.getDayOfWeek(this.getNumericalDate(entryTime))
                 //check to see if the day has changed since the last period
@@ -131,7 +131,7 @@ class PullLocalWeather {
                     console.log(currentBlueHour)
 
                     let obj = {
-                        x: dayIndex,
+                        x: entryTime[0],
                         y: currentBlueHour,
                         r: 10
                     }
@@ -334,7 +334,8 @@ class PullLocalWeather {
 
     }
 
-    createChart = (dailySummary, dailySummaryDetail) => {
+    //creates the weekly overview chart as well as the detail view chart
+    createChart = (dailySummary, dailySummaryDetail) => { 
         const weatherChart = document.getElementById('weather-chart');
         console.log(dailySummary);
         new Chart(weatherChart, {
@@ -358,7 +359,7 @@ class PullLocalWeather {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 10,
+                        
                         title: {
                             display: true,
                             text: 'Blue Hours',
@@ -379,25 +380,23 @@ class PullLocalWeather {
 
             }
         });
-       
+        console.log(dailySummaryDetail)
         const weatherBubbleChart = document.getElementById('weather-bubble-chart');
         new Chart(weatherBubbleChart, {
             type: 'bubble',
             data: {
                 datasets: [{
-                    label: 'First Dataset',
                     data: dailySummaryDetail,
-                    backgroundColor: 'rgb(100 149 237)'
+                    backgroundColor: 'rgb(100 149 237)',
                 }]
             },
             options: {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        
                         reverse: true,
-                        min: 0,
-                        max: 24,
+                        min: 8,
+                        max: 20,
                         ticks: {
                             autoSkip: false,
                             stepSize: 4,
@@ -405,35 +404,45 @@ class PullLocalWeather {
                                 enabled: true,
                                 stepSize: 1
                             },
-
-                            
-                        }
+                        },    
                     },
                     x: {
-                        min: 0,
-                        max: 6,
+                        type: 'time', //indicate that the X axis is a time scale
+                        time: {
+                            unit: 'day' //with day as the unit
+                        },
                         ticks: {
-                            stepSize: 1
+                            stepSize: 1,
+                            callback: function (val) { //and modify the ticks such that we print e.g. Sun, Mon etc
+                                console.log(val)
+                                let date = new Date(val).toString();
+                                let trimmedDate = date.substr(0,3)
+                                console.log(trimmedDate)
+                                return trimmedDate
+                            },  
+                        },
+                        grid: {
+                            
+                            offset:true
                         }
-                        
                     }
                 },
                 elements: {
                     point: {
-                        pointStyle: 'rectRounded'
+                        pointStyle: 'rect'
                     }
                 },
                 maintainAspectRatio: false,
-                width: 200
+                width: 200,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
                 
             }
         })
-
     }
-
-
-    
-
 }
 
 //using buttons on the UI, filter which days of the week are visible
