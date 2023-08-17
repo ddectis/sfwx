@@ -358,7 +358,7 @@ class PullLocalWeather {
                     y: {
                         beginAtZero: true,
                         title: {
-                            display: true,
+                            display: false,
                             text: 'Blue Hours',
                         }
                     }
