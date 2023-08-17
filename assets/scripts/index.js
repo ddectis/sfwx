@@ -94,7 +94,7 @@ class PullLocalWeather {
             if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
                 let f = period.dewpoint.value * 9 / 5 + 32; //convert the C value we will receive into an F value
                 let entryTime = period.startTime.split("T"); //split period.startTime into an array that splits at T
-                console.log(entryTime)
+                //console.log(entryTime)
                 //check which day the current period belongs to
                 currentDayBeingTabulated = this.getDayOfWeek(this.getNumericalDate(entryTime))
                 //check to see if the day has changed since the last period
@@ -104,9 +104,9 @@ class PullLocalWeather {
                     }
                     dailySummary = { ...dailySummary, ...newDailyBlueHourCount }    //and spread it into the dailySummary object
                     dailyBlueHours = 0; //reset the blue hours so that the next day begins at 0
-                    console.log("the day has advanced")
+                    //console.log("the day has advanced")
                     dayIndex++;
-                    console.log(dailySummary)
+                    //console.log(dailySummary)
                 }
                 //console.log(currentDayBeingTabulated)
 
@@ -128,7 +128,7 @@ class PullLocalWeather {
                     dailyBlueHours++;
                     let currentBlueHour = parseInt(entryTime[1].substring(0, 2))
                     
-                    console.log(currentBlueHour)
+                    //console.log(currentBlueHour)
 
                     let obj = {
                         x: entryTime[0],
@@ -176,7 +176,7 @@ class PullLocalWeather {
             return weatherObjects;
         })
 
-        console.log(dailySummary)
+        //console.log(dailySummary)
         //console.log("Weather Objects Follow");
         //console.dir(weatherObjects);
         this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
@@ -337,7 +337,7 @@ class PullLocalWeather {
     //creates the weekly overview chart as well as the detail view chart
     createChart = (dailySummary, dailySummaryDetail) => { 
         const weatherChart = document.getElementById('weather-chart');
-        console.log(dailySummary);
+        //console.log(dailySummary);
         new Chart(weatherChart, {
             type: 'bar',
             data: {
@@ -377,7 +377,7 @@ class PullLocalWeather {
 
             }
         });
-        console.log(dailySummaryDetail)
+        //console.log(dailySummaryDetail)
         const weatherBubbleChart = document.getElementById('weather-bubble-chart');
         new Chart(weatherBubbleChart, {
             type: 'bubble',
@@ -421,10 +421,10 @@ class PullLocalWeather {
                         ticks: {
                             stepSize: 1,
                             callback: function (val) { //and modify the ticks such that we print e.g. Sun, Mon etc
-                                console.log(val)
+                                //console.log(val)
                                 let date = new Date(val).toString();
                                 let trimmedDate = date.substr(0,3)
-                                console.log(trimmedDate)
+                                //console.log(trimmedDate)
                                 return trimmedDate
                             },  
                         },
@@ -474,7 +474,7 @@ class FilterDaysOfWeek {
 
         showOnlyBlueButton.addEventListener("change", event => {
             this.showOnlyBlue = !this.showOnlyBlue;
-            console.log("show only blue: " + this.showOnlyBlue)
+            //console.log("show only blue: " + this.showOnlyBlue)
         })
 
         //then put them all into an array
@@ -582,10 +582,10 @@ const projectInfoPanel = document.querySelector("#project-info")
 aboutButton.addEventListener("click", event => {
     projectInfoPanel.classList.toggle("hide")
     if (aboutButton.textContent === "i") {
-        console.log("swapping")
+        //console.log("swapping")
         aboutButton.textContent = "x"
     } else {
-        console.log("swapping back")
+        //console.log("swapping back")
         aboutButton.textContent = "i"
     }
 })
