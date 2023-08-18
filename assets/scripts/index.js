@@ -69,7 +69,7 @@ class PullLocalWeather {
         }
 
         let updateMinutes = updateDateObject.getMinutes();
-        console.log(updateMinutes);
+        //console.log(updateMinutes);
         if (updateMinutes < 10) {
             updateMinutes = "0" + updateMinutes;
         }
@@ -90,6 +90,7 @@ class PullLocalWeather {
         let totalHours = 0;                 //keep track of the sum of blue hours in the whole week
         let currentDayBeingTabulated = ``;  //use this value as the periods.forEach loop goes through each period. Check to see when it changes and then tabulate how many blue hours each day has
         let lastDayTabulated = ``;          //when currentDay is not = lastDay, we know that the day has changed
+        let lastDayEntryTime = ``;
         let periodIndex = 0;
         let dayIndex = 0;                   //this value increases by 1 every time we detect that the parser has advanced to the next day
         let dailyBlueHours = 0;
@@ -109,6 +110,15 @@ class PullLocalWeather {
                         [lastDayTabulated]: dailyBlueHours
                     }
                     dailySummary = { ...dailySummary, ...newDailyBlueHourCount }    //and spread it into the dailySummary object
+                    if (dailyBlueHours === 0) { //then the day we just finished tabulated contained 0 blue hours so we need to put a dummy object on the graph
+                        let obj = {
+                            x: lastDayEntryTime,
+                            y: 9,
+                            r: 0
+                        }
+                        dailySummaryDetail.push(obj)
+                    }
+
                     dailyBlueHours = 0; //reset the blue hours so that the next day begins at 0
                     //console.log("the day has advanced")
                     dayIndex++;
@@ -175,6 +185,7 @@ class PullLocalWeather {
                 }
                 weatherObjects.push(obj);   //add the new object to the array that stores the forecast objects
                 lastDayTabulated = currentDayBeingTabulated;
+                lastDayEntryTime = entryTime[0];
                 periodIndex++;
                 totalHours++;
             }
