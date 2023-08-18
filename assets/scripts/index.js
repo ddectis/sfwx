@@ -118,9 +118,10 @@ class PullLocalWeather {
                 //check to see if conditions are good
                 let windThreshold = 11; //looking for a wind value thats < threshold
                 let dewDeltaThreshold = 4; //looking for a delta that's > threshold
+                let dewThreshold = 60; // looking for a dewpoint thats < threshold
                 let temperatureThreshold = 65; //look for a temperature that's > threshold
                 //console.log("Windspeed: " + windSpeed + " DewDelta: " + tempDewDelta);
-                if (windSpeed < windThreshold && tempDewDelta > dewDeltaThreshold || period.temperature > temperatureThreshold) {
+                if (windSpeed < windThreshold && tempDewDelta > dewDeltaThreshold || period.temperature > temperatureThreshold && f < dewThreshold) {
                     goodConditions = true;
                     countOfBlueHours++;
 
