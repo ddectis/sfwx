@@ -68,11 +68,17 @@ class PullLocalWeather {
             updateHours -= 12   //and subtract 12 hours from the time so we can print something like 4:00 PM instead of 16:00
         }
 
+        let updateMinutes = updateDateObject.getMinutes();
+        console.log(updateMinutes);
+        if (updateMinutes < 10) {
+            updateMinutes = "0" + updateMinutes;
+        }
+
         let updateDayOfWeek = this.getDayOfWeek(this.getNumericalDate(updateTime)); //get the day of the week e.g. Sun or Mon
         //console.log(updateTime[0].substring(5));
         //console.log(updateDate)
 
-        lastUpdated.innerHTML = `<p>Data Updated @ ${updateHours}:${updateDateObject.getMinutes()} ${amPM} </p>`
+        lastUpdated.innerHTML = `<p>Data Updated @ ${updateHours}:${updateMinutes} ${amPM} </p>`
         if (usingCache) {
             lastUpdated.insertAdjacentHTML("beforeend", `<h2><b>Warning: Using Cached Forecast due to API Issues</b></h2>`)
         }
