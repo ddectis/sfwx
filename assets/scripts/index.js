@@ -540,10 +540,10 @@ class PullLocalWeather {
                                 if (hour > 23 && hour < 47) {
                                     return daysOfWeek[currentDay + 1]
                                 }
-                                if (hour > 47 && hour < 72) {
+                                if (hour >= 47 && hour < 72) {
                                     return daysOfWeek[currentDay + 2]
                                 }
-                                if (hour > 72) {
+                                if (hour >= 72) {
                                     return daysOfWeek[currentDay + 3]
                                 }
                                 return daysOfWeek[currentDay]
@@ -594,14 +594,14 @@ class PullLocalWeather {
                         ticks: {
                             callback: function (val) {
                                 let hour = val + currentHour;
-                                if (hour > 23 && hour < 47) {
+                                if (hour >= 23 && hour < 47) {
                                     
                                     return daysOfWeek[currentDay + 1]
                                 }
-                                if (hour > 47 && hour < 72) {
+                                if (hour >= 47 && hour < 72) {
                                     return daysOfWeek[currentDay + 2]
                                 }
-                                if (hour > 72) {
+                                if (hour >= 72) {
                                     return daysOfWeek[currentDay + 3]
                                 }
                                 return daysOfWeek[currentDay]
