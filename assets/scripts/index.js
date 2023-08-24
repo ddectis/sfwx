@@ -488,8 +488,8 @@ class PullLocalWeather {
 
             }
         })
-        console.log(dewPointPeriods)
-        console.log(dewPointData)
+        //console.log(dewPointPeriods)
+        //console.log(dewPointData)
         const dewPointChart = document.getElementById('dew-point-chart');
         const currentDate = new Date();
         const currentHour = currentDate.getHours();
@@ -497,7 +497,7 @@ class PullLocalWeather {
         
         
         const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN','MON','TUE', 'WED'];
-        console.log(daysOfWeek[currentDay]);
+        //console.log(daysOfWeek[currentDay]);
         new Chart(dewPointChart, {
             type: 'line',
             data: {
@@ -507,14 +507,14 @@ class PullLocalWeather {
                     label: 'Dewpoint',
                     data: dewPointData,
                     fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(0, 0, 0)',
                     tension: 0.2
                 },
                 {
                     label: 'Temperature',
                     data: tempData,
                     fill: false,
-                    borderColor: 'rgb(0,0,0)',
+                    borderColor: 'rgb(100, 149, 237)',
                     tension: 0.2
                 }],
 
@@ -538,7 +538,6 @@ class PullLocalWeather {
                             callback: function (val) {
                                 let hour = val + currentHour;
                                 if (hour > 23 && hour < 47) {
-                                    console.log("end of day");
                                     return daysOfWeek[currentDay + 1]
                                 }
                                 if (hour > 47 && hour < 72) {
@@ -550,7 +549,7 @@ class PullLocalWeather {
                                 return daysOfWeek[currentDay]
                             }
                         },
-                        max:72,
+                        max:78,
                     }
                 },
                 elements: {
@@ -577,7 +576,7 @@ class PullLocalWeather {
                     label: 'Delta',
                     data: deltaData,
                     fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(100, 149, 237)',
                     tension: 0.2
                 }]
 
@@ -596,7 +595,7 @@ class PullLocalWeather {
                             callback: function (val) {
                                 let hour = val + currentHour;
                                 if (hour > 23 && hour < 47) {
-                                    console.log("end of day");
+                                    
                                     return daysOfWeek[currentDay + 1]
                                 }
                                 if (hour > 47 && hour < 72) {
@@ -608,7 +607,7 @@ class PullLocalWeather {
                                 return daysOfWeek[currentDay]
                             }
                         },
-                        max: 72
+                        max: 78
                     }
                 },
                 elements: {

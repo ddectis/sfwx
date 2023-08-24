@@ -53,34 +53,38 @@
                     <div class="weather-chart-outline">
                         <h2>Weekly Overview</h2>
                         <div class="weather-charts-parent">
-                            <div>
-                                <div class="weather-chart-holder">
+                            <div class="two-chart-holder">
+                                <div class="weather-chart-holder detail-chart-holder">
                                     <div class="weather-chart-inner">
-                                        <p>Count</p>
-                                        <canvas id="weather-chart"></canvas>
+                                        <p><b>Distribution</b></p>
+                                        <canvas id="weather-bubble-chart"></canvas>
+                                        <p class="smaller">When are the blue hours?</p>
                                     </div>
 
                                 </div>
-                                <div class="weather-chart-holder detail-chart-holder">
+                                <div class="weather-chart-holder">
                                     <div class="weather-chart-inner">
-                                        <p>Distribution</p>
-                                        <canvas id="weather-bubble-chart"></canvas>
+                                        <p><b>Count</b></p>
+                                        <canvas id="weather-chart"></canvas>
+                                        <p class="smaller">How many blue hours per day?</p>
                                     </div>
 
                                 </div>
                             </div>
-                            <div>
+                            <div class="two-chart-holder">
                                 <div class="weather-chart-holder detail-chart-holder">
                                     <div class="weather-chart-inner">
-                                        <p>Temperature / Dew Point</p>
+                                        <p><b>Temperature / Dew Point</b></p>
                                         <canvas id="dew-point-chart"></canvas>
+                                        <p class="smaller">Hourly Temperature over dew point</p>
                                     </div>
 
                                 </div>
                                 <div class="weather-chart-holder detail-chart-holder">
                                     <div class="weather-chart-inner">
-                                        <p>Temp - Dew</p>
+                                        <p><b>Temp - Dew Delta</b></p>
                                         <canvas id="delta-chart"></canvas>
+                                        <p class="smaller">Higher delta = less fog</p>
                                     </div>
 
                                 </div>

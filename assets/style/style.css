@@ -61,6 +61,11 @@ canvas {
     border: 1px solid black;
     border-radius:10px;
     align-items:center;
+    margin-inline: 6px;
+}
+
+.two-chart-holder{
+
 }
 
 .weather-chart-inner {
@@ -76,7 +81,9 @@ canvas {
 }
 
 .weather-charts-parent{
-
+    display:flex;
+    flex-direction:column;
+    
 }
 
 #weather-chart {
@@ -280,6 +287,7 @@ label {
     padding-bottom: 15px;
     max-width: 750px;
 }
+
 
 .title-and-cell {
     display: flex;
@@ -503,12 +511,14 @@ label {
 }
 
 @media screen and (min-width:700px){
-    .summary-holder{
-        flex-direction:row;
+
+
+    .two-chart-holder {
+        width:50%;
     }
 
-    .weather-chart-outline{
-        width:45%
+    .weather-charts-parent{
+        flex-direction:row;
     }
 
     li{
