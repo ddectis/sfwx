@@ -2,11 +2,20 @@
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KCDM9PXZY5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-KCDM9PXZY5');
+    </script>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="./assets/style/style.css?25" />
-     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Danometer - SF West Side Prognostication</title>
-    
+
 </head>
 <body>
     <div class="app">
@@ -44,20 +53,39 @@
                     <div class="weather-chart-outline">
                         <h2>Weekly Overview</h2>
                         <div class="weather-charts-parent">
-                            <div class="weather-chart-holder">
-                                <div class="weather-chart-inner">
-                                    <p>Count</p>
-                                    <canvas id="weather-chart"></canvas>
+                            <div>
+                                <div class="weather-chart-holder">
+                                    <div class="weather-chart-inner">
+                                        <p>Count</p>
+                                        <canvas id="weather-chart"></canvas>
+                                    </div>
+
                                 </div>
-                                
-                            </div>
-                            <div class="weather-chart-holder detail-chart-holder">
-                                <div class="weather-chart-inner">
-                                    <p>Distribution</p>
-                                    <canvas id="weather-bubble-chart"></canvas>
+                                <div class="weather-chart-holder detail-chart-holder">
+                                    <div class="weather-chart-inner">
+                                        <p>Distribution</p>
+                                        <canvas id="weather-bubble-chart"></canvas>
+                                    </div>
+
                                 </div>
-                                
                             </div>
+                            <div>
+                                <div class="weather-chart-holder detail-chart-holder">
+                                    <div class="weather-chart-inner">
+                                        <p>Temperature / Dew Point</p>
+                                        <canvas id="dew-point-chart"></canvas>
+                                    </div>
+
+                                </div>
+                                <div class="weather-chart-holder detail-chart-holder">
+                                    <div class="weather-chart-inner">
+                                        <p>Temp - Dew</p>
+                                        <canvas id="delta-chart"></canvas>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
                         </div>
 
                     </div>

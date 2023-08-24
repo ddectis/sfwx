@@ -63,6 +63,9 @@ class PullLocalWeather {
 
         let updateHours = updateDateObject.getHours() //pull out the hours from the newly created Date object
         let amPM = "AM"
+        if (updateHours === 12) {
+            amPM = "PM"
+        }
         if (updateHours > 12) { //the NWS API returns the time in 24 hours, so check to see if it's the afternoon
             amPM = "PM"         //if so, set the text to indicate
             updateHours -= 12   //and subtract 12 hours from the time so we can print something like 4:00 PM instead of 16:00
@@ -96,6 +99,10 @@ class PullLocalWeather {
         let dailyBlueHours = 0;
         let dailySummary = {}                //this object will store the count of blue hours in each day. Used to create a daily summary grap
         let dailySummaryDetail = [];         //this object will store the list of blue hours for each day in an object to feed to the charts.js bubble chart
+        let dewPointPeriods = [];           //this array will log time periods to match up with the dewpoints because the charts.js line graph seems to need an array for the labels and another array for the data
+        let dewPointData = [];              //this array will store the dew point for each period
+        let tempData = [];                  //this array will store the temperature values to put on the dew point graph
+        let deltaData = [];                 //this array will store 
 
         periods.forEach(period => {         //iterate over each period
             if (period.dewpoint !== null) { //check to ensure that the dewpoint value is not null. ONly try to create an add an object when it is not null
@@ -144,7 +151,7 @@ class PullLocalWeather {
                     //add a blue hour to the current day being tabulated
                     dailyBlueHours++;
                     let currentBlueHour = parseInt(entryTime[1].substring(0, 2))
-                    
+
                     //console.log(currentBlueHour)
 
                     let obj = {
@@ -172,11 +179,16 @@ class PullLocalWeather {
                     //console.log("We appended a 0 to the front of a < 10 windspeed and got: " + windSpeed)
                 }
 
+                let date = entryTime[0].substring(5);
+                let time = entryTime[1].substring(0, 2);
+                let comboDateTime = `${time}:00 ${date}`
+                //console.log(comboDateTime)
+
                 //create a new object for each iteration. Each of these objects corresponds to one hour within the forecast. We'll have 156 of these in total
                 let obj = {
 
-                    date: entryTime[0].substring(5),
-                    time: entryTime[1].substring(0, 2),
+                    date: date,
+                    time: time,
                     temperature: period.temperature,
                     dewpoint: f,
                     windDirection: period.windDirection,
@@ -184,12 +196,21 @@ class PullLocalWeather {
                     goodConditions: goodConditions
                 }
                 weatherObjects.push(obj);   //add the new object to the array that stores the forecast objects
+
+                //create a new object that will populate the data structure for the dew point graph
+
+                //console.log(dewObject)
+                //each of the following .push lines create data to use in line charts
+                dewPointData.push(f)
+                dewPointPeriods.push(comboDateTime)
+                tempData.push(period.temperature)
+                deltaData.push(tempDewDelta)
+                //console.log(dewPointData)
                 lastDayTabulated = currentDayBeingTabulated;
                 lastDayEntryTime = entryTime[0];
                 periodIndex++;
                 totalHours++;
             }
-
 
             return weatherObjects;
         })
@@ -199,7 +220,7 @@ class PullLocalWeather {
         //console.dir(weatherObjects);
         this.printSummary(countOfBlueHours, dayWithLongestBlueStreak, longestBlueHourStreak, totalHours)
         this.printCast(weatherObjects);
-        this.createChart(dailySummary, dailySummaryDetail)
+        this.createChart(dailySummary, dailySummaryDetail, dewPointPeriods, dewPointData, tempData, deltaData)
         return weatherObjects;
     }
 
@@ -353,7 +374,7 @@ class PullLocalWeather {
     }
 
     //creates the weekly overview chart as well as the detail view chart
-    createChart = (dailySummary, dailySummaryDetail) => { 
+    createChart = (dailySummary, dailySummaryDetail, dewPointPeriods, dewPointData, tempData, deltaData) => {
         const weatherChart = document.getElementById('weather-chart');
         //console.log(dailySummary);
         new Chart(weatherChart, {
@@ -429,7 +450,7 @@ class PullLocalWeather {
                                     return val + "AM"
                                 }
                             }
-                        },    
+                        },
                     },
                     x: {
                         type: 'time', //indicate that the X axis is a time scale
@@ -441,14 +462,14 @@ class PullLocalWeather {
                             callback: function (val) { //and modify the ticks such that we print e.g. Sun, Mon etc
                                 //console.log(val)
                                 let date = new Date(val).toString();
-                                let trimmedDate = date.substr(0,3)
+                                let trimmedDate = date.substr(0, 3)
                                 //console.log(trimmedDate)
                                 return trimmedDate
-                            },  
+                            },
                         },
                         grid: {
-                            
-                            offset:true
+
+                            offset: true
                         }
                     }
                 },
@@ -464,7 +485,143 @@ class PullLocalWeather {
                         display: false
                     }
                 }
-                
+
+            }
+        })
+        console.log(dewPointPeriods)
+        console.log(dewPointData)
+        const dewPointChart = document.getElementById('dew-point-chart');
+        const currentDate = new Date();
+        const currentHour = currentDate.getHours();
+        const currentDay = currentDate.getDay();
+        
+        
+        const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN','MON','TUE', 'WED'];
+        console.log(daysOfWeek[currentDay]);
+        new Chart(dewPointChart, {
+            type: 'line',
+            data: {
+                labels: dewPointPeriods,
+                data: dewPointData,
+                datasets: [{
+                    label: 'Dewpoint',
+                    data: dewPointData,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.2
+                },
+                {
+                    label: 'Temperature',
+                    data: tempData,
+                    fill: false,
+                    borderColor: 'rgb(0,0,0)',
+                    tension: 0.2
+                }],
+
+            },
+            options: {
+                pointRadius: 0,
+                scales: {
+                    y: {
+
+                        ticks: {
+                            
+                        },
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Hours",
+                        },
+                        ticks: { 
+                            display: true,
+                            callback: function (val) {
+                                let hour = val + currentHour;
+                                if (hour > 23 && hour < 47) {
+                                    console.log("end of day");
+                                    return daysOfWeek[currentDay + 1]
+                                }
+                                if (hour > 47 && hour < 72) {
+                                    return daysOfWeek[currentDay + 2]
+                                }
+                                if (hour > 72) {
+                                    return daysOfWeek[currentDay + 3]
+                                }
+                                return daysOfWeek[currentDay]
+                            }
+                        },
+                        max:72,
+                    }
+                },
+                elements: {
+
+                },
+                maintainAspectRatio: false,
+                width: 200,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+
+            }
+        })
+
+        const deltaChart = document.getElementById('delta-chart');
+        new Chart(deltaChart, {
+            type: 'line',
+            data: {
+                labels: dewPointPeriods,
+
+                datasets: [{
+                    label: 'Delta',
+                    data: deltaData,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.2
+                }]
+
+            },
+            options: {
+                pointRadius: 0,
+                scales: {
+                    y: {
+
+                        ticks: {
+
+                        },
+                    },
+                    x: {
+                        ticks: {
+                            callback: function (val) {
+                                let hour = val + currentHour;
+                                if (hour > 23 && hour < 47) {
+                                    console.log("end of day");
+                                    return daysOfWeek[currentDay + 1]
+                                }
+                                if (hour > 47 && hour < 72) {
+                                    return daysOfWeek[currentDay + 2]
+                                }
+                                if (hour > 72) {
+                                    return daysOfWeek[currentDay + 3]
+                                }
+                                return daysOfWeek[currentDay]
+                            }
+                        },
+                        max: 72
+                    }
+                },
+                elements: {
+
+                },
+                maintainAspectRatio: false,
+                width: 200,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+
             }
         })
     }
