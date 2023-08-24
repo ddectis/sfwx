@@ -418,13 +418,13 @@ label {
 .blue {
     background-color: cornflowerblue;
     color: #121212;
-    padding-inline: 25px;
+    padding-inline: 7px;
     padding-block: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 10px;
-    width:75%
+    width:85%
 
 }
 
