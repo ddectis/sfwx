@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KCDM9PXZY5"></script>
@@ -17,112 +18,132 @@
     <title>Danometer - SF West Side Prognostication</title>
 
 </head>
+
 <body>
     <div class="app">
         <div class="title">
 
-            <a class="smaller" href="https://dectronica.com/">>> Project by: Dectronica // Click to see more <<</a>
+            <a class="smaller" href="https://dectronica.com/">>> Project by: Dectronica // Click to see more << </a>
 
-            <div class="sub-title hide" id="project-info">
-                <div class="title-and-cell">
-                    <h1><u>Danometer</u></h1>
-                    <img class="cell" src="./assets/img/cell-1.jpg" alt="The map cell indicated on this page" />
-                </div>
-
-                <div class="intro-text">
-
-                    <h3>This forecast is based on the National Weather Service data for the Central + Outer Sunset. The goal here is to use that data to highlight hours conducive to clear skies.</h3>
-                    <h3>I call them Blue Hours.</h3>
-                    <h3>When the temperature is far enough from the dew point and the winds are light, or when the forecasted temperature is high enough, we've got a better chance of sunshine than marine layer.</h3>
-                    <h3>This is a work in progress. I'd love to hear your feedback at <a style="font-size:unset" href="mailto:dandectis@gmail.com"><b>DanDectis@gmail.com</b></a></h3>
-
-                </div>
-
-
-            </div>
-
-            <div class="blue border-radius default-border">
-
-                <button id="info-toggle" class="info-button">i</button>
-
-                <div class="summary-holder">
-
-                    <div class="weather-summary" id="weather-summary">
-                        <h1>Sunset + Richmond Forecast</h1>
-                    </div>
-                    <div class="weather-chart-outline">
-                        <h2>Forecast Overview</h2>
-                        <div class="weather-charts-parent">
-                            <div class="two-chart-holder">
-                                <div class="weather-chart-holder detail-chart-holder">
-                                    <div class="weather-chart-inner">
-                                        <p><b>Distribution</b></p>
-                                        <canvas id="weather-bubble-chart"></canvas>
-                                        <p class="smaller">When are the blue hours?</p>
-                                    </div>
-
-                                </div>
-                                <div class="weather-chart-holder">
-                                    <div class="weather-chart-inner">
-                                        <p><b>Count</b></p>
-                                        <canvas id="weather-chart"></canvas>
-                                        <p class="smaller">How many blue hours per day?</p>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="two-chart-holder">
-                                <div class="weather-chart-holder detail-chart-holder">
-                                    <div class="weather-chart-inner">
-                                        <p><b>Temperature / Dew Point</b></p>
-                                        <canvas id="dew-point-chart"></canvas>
-                                        <p class="smaller">Hourly Temperature over dew point</p>
-                                    </div>
-
-                                </div>
-                                <div class="weather-chart-holder detail-chart-holder">
-                                    <div class="weather-chart-inner">
-                                        <p><b>Temp - Dew Delta</b></p>
-                                        <canvas id="delta-chart"></canvas>
-                                        <p class="smaller">Higher delta = less fog</p>
-                                    </div>
-
-                                </div>
-                            </div>
-                            
+                    <div class="sub-title hide" id="project-info">
+                        <div class="title-and-cell">
+                            <h1><u>Danometer</u></h1>
+                            <img class="cell" src="./assets/img/cell-1.jpg" alt="The map cell indicated on this page" />
                         </div>
 
-                    </div>
-                </div>
+                        <div class="intro-text">
 
+                            <h3>This forecast is based on the National Weather Service data for the Central + Outer
+                                Sunset. The goal here is to use that data to highlight hours conducive to clear skies.
+                            </h3>
+                            <h3>I call them Blue Hours.</h3>
+                            <h3>When the temperature is far enough from the dew point and the winds are light, or when
+                                the forecasted temperature is high enough, we've got a better chance of sunshine than
+                                marine layer.</h3>
+                            <h3>This is a work in progress. I'd love to hear your feedback at <a style="font-size:unset"
+                                    href="mailto:dandectis@gmail.com"><b>DanDectis@gmail.com</b></a></h3>
 
-
-
-                <div class="blue-info-container">
-                    <h2>What is a Blue Hour?</h2>
-                    <div class="blue-details">
-                        <div class="param-container">
-                            <ul class="blue-params">
-                                <li>(TEMP-DEW) > 5</li>
-                                <p><b>AND</b></p>
-                                <li>WIND < 10 mph</li>
-                            </ul>
-                            <h2>OR</h2>
-                            <ul class="blue-params">
-                                <li>TEMP > 65 deg</li>
-                                <p><b>AND</b></p>
-                                <li>DEW < 60 deg</li>
-                            </ul>
                         </div>
-                        <br />
-                        <p>Days with hours like these, especially in the morning, seem likely to be sunny as opposed to foggy / overcast in the Sunset / Richmond</p>
-                        <br/><p><u>NOTE</u>: This model is under active development.</p>
+
+
                     </div>
-                </div>
 
-                <h3 id="last-updated">Forecast Data Last Updated: </h3>
+                    <div class="blue border-radius default-border">
 
-            </div>
+                        <button id="info-toggle" class="info-button">i</button>
+
+                        <div class="summary-holder">
+
+                            <div class="weather-summary" id="weather-summary">
+                                <h1>Sunset + Richmond Forecast</h1>
+                            </div>
+                            <div class="weather-chart-outline">
+                                <h2>Forecast Overview</h2>
+                                <div class="weather-charts-parent">
+                                    <div class="two-chart-holder">
+                                        <div class="weather-chart-holder detail-chart-holder">
+                                            <div class="weather-chart-inner">
+                                                <p><b>Distribution</b></p>
+                                                <canvas id="weather-bubble-chart"></canvas>
+                                                <p class="smaller">When are the blue hours?</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="weather-chart-holder">
+                                            <div class="weather-chart-inner">
+                                                <p><b>Count</b></p>
+                                                <canvas id="weather-chart"></canvas>
+                                                <p class="smaller">How many blue hours per day?</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="two-chart-holder">
+                                        <div class="weather-chart-holder detail-chart-holder">
+                                            <div class="weather-chart-inner">
+                                                <p><b>Temperature / Dew Point</b></p>
+                                                <canvas id="dew-point-chart"></canvas>
+                                                <p class="smaller">Hourly Temperature over dew point</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="weather-chart-holder detail-chart-holder">
+                                            <div class="weather-chart-inner">
+                                                <p><b>Temp - Dew Delta</b></p>
+                                                <canvas id="delta-chart"></canvas>
+                                                <p class="smaller">Higher delta = less fog</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="blue-info-container">
+                            <h2>What is a Blue Hour?</h2>
+                            <div class="blue-details">
+                                <div class="param-container">
+                                    <div class="new-star-holder">
+                                        <img src="assets\img\NEW.png" class="new-star">
+                                    </div>
+                                    <ul class="blue-params wide">
+                                        
+                                        <li><b>(TEMP - DEW) > 10</b></li>
+                                        <li>When the air is this dry, clear skies are likely, regardless of wind.</li>
+                                    </ul>
+                                    <h2 class="or-spacers">Otherwise...</h2>
+                                    <div class="param-subcontainer">
+                                        <ul class="blue-params subparam">
+                                            <li><b>(TEMP-DEW) > 5</b></li>
+                                            <p><i>AND</i></p>
+                                            <li><b>WIND < 10 mph</b></li>
+                                        </ul>
+                                        <h2 class="or-spacers">OR</h2>
+                                        <ul class="blue-params subparam">
+                                            <li><b>TEMP > 65 deg</b></li>
+                                            <p><i>AND</i></p>
+                                            <li><b>DEW < 60 deg</b></li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                                <br />
+                                <p>Days with hours like these, especially in the morning, seem likely to be sunny as
+                                    opposed to foggy / overcast in the Sunset / Richmond</p>
+                                <br />
+                                <p><u>NOTE</u>: This model is under active development.</p>
+                            </div>
+                        </div>
+
+                        <h3 id="last-updated">Forecast Data Last Updated: </h3>
+
+                    </div>
 
         </div>
         <div class="detailed-forecast-holder">
@@ -152,7 +173,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script type="module" src="./assets/scripts/index.js?25"></script>
 </body>
+
 </html>
