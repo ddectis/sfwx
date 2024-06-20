@@ -26,6 +26,7 @@ class PullLocalWeather {
          .then((response) => {
             if (response.status === 200) {
                //check the response status
+               //console.log("response ok", response)
                return response.json(); //parse it to a JSON if you get a 200 OK
             } else {
                //if it's not 200 / OK, then indicate that we need to use the cached forecast
@@ -35,6 +36,7 @@ class PullLocalWeather {
          })
          .then((data) => {
             //then do stuff with the response
+            //console.log(data)
             if (!useCachedForecast) {
                //if you're not indicated to use the cahedForecast,
                //console.log("about to set local storage")
@@ -50,11 +52,13 @@ class PullLocalWeather {
          })
          .catch((error) => {
             //user should only end up in the catch block in the case that the API returns a bad response AND it's their first visit to the site/
+            //console.log(useCachedForecast)
+            
             console.log(error);
             const weatherSummary = document.querySelector("#weather-summary");
             weatherSummary.insertAdjacentHTML(
                "beforeend",
-               `<p class="alert"><b>Apologies.<br/><br/> The NWS Weather API sometimes returns an invalid forecast due to missing hours at the end of the period. <br/><br/> Therefore, I attempt to fallback to a cached version of the forecast. <br/><br/>However, this appears to be your first visit to the Danometer, as your device does not have a cached forecast to fallback to. <br/><br/>So, instead, you're seeing this message. Sorry about that. This error will resolve in the next forecast update / within a few hours, please check again.</b>`
+               `<p class="alert"><b>Apologies.<br/><br/>Something broke. Please message dandectis@gmail.com to let me know.</b>`
             );
          });
    };
@@ -67,8 +71,9 @@ class PullLocalWeather {
       //console.log(periods)                //optional console log to interrogate the whole periods definition
 
       const lastUpdated = document.querySelector("#last-updated"); //grab a place on the page to place the time that the forecast was updated
-      let updateTime = data.properties.updated.split("T"); //data.properties.update comes in as: 2023-08-13T08:54:01+00:00
-      //console.log(data.properties.updated)
+      //console.log(data.properties)
+      let updateTime = data.properties.updateTime.split("T"); //data.properties.update comes in as: 2023-08-13T08:54:01+00:00
+      
       let dateString = updateTime[0] + "-" + updateTime[1]; //re-combine the split updated time into the format expected to create a JS Date Object
       console.log(dateString);
       const updateDateObject = this.createDateObject(dateString); //and then put the string into a Date object so that we can use Date Object methods later
@@ -617,7 +622,7 @@ class PullLocalWeather {
                      },
                      showLabelBackdrop: false,
                      callback: function (val) {
-                        console.log(val);
+                        //console.log(val);
                         let hour = val + currentHour;
                         let hourofDay = hour % 24;
                         //console.log(hourofDay);
